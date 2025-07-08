@@ -1,0 +1,5 @@
+add_subdirectory(eventpp)
+add_subdirectory(json)
+add_subdirectory(libguarded)
+add_subdirectory(minja)
+add_subdirectory(oatpp)

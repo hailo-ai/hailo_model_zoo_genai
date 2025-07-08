@@ -1,0 +1,235 @@
+Usage
+=====
+
+Prerequisites
+-------------
+
+* Hailo-10H module.
+* Ensure  [**HailoRT**](https://github.com/hailo-ai/hailort) version **HailoRT v5.0** or above is installed (for non-docker installations).
+
+
+Installation
+------------
+
+Step 1 - install the **runtime** (choose *one*)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **Option A - Debian package** *(Recommended)*
+
+  Download the latest Debian package from the [**Developer Zone**](https://hailo.ai/developer-zone/) and install:
+
+  .. code-block::
+
+    wget https://developer.hailo.ai/genai/hailo_model_zoo_gen_ai_<ver>_<arch>.deb
+    sudo dpkg -i hailo_model_zoo_gen_ai_<ver>_<arch>.deb
+
+
+2. **Option B - Docker** *(Zero-install host)*
+
+  * Download the latest pre-built HailoRT GenAI image from the [**Developer Zone**](https://hailo.ai/developer-zone/):
+
+    .. code-block::
+
+      wget https://developer.hailo.ai/genai/hailort-genai_<ver>_<arch>.tar.gz
+
+  * The image contains the HailoRT and the Hailo-Ollama server, and is ready to run.
+
+  * Load it into Docker and launch:
+
+    .. code-block::
+
+      docker load -i hailort-genai_<ver>_<arch>.tar.gz
+      docker run --rm --device /dev/hailo0 \
+          -p 8000:8000 \
+          -v ~/.local/share/hailo-ollama/models/blob:/root/.local/share/hailo-ollama/models/blob \
+          hailort-genai:<ver>
+
+  * The Hailo-Ollama server will be available at http://localhost:8000.
+
+
+3. **Option C - Install from source** *(Advanced)*
+
+  * Clone the Hailo Model Zoo GenAI repository and build the Hailo-Ollama server:
+
+    .. code-block::
+
+      git clone https://github.com/hailo-ai/hailo_model_zoo_gen_ai.git
+      cd hailo-model-zoo-genai/
+      mkdir build && cd build
+      cmake -DCMAKE_BUILD_TYPE=Release ..
+      cmake --build .
+
+  * Install to user home (run still in the ``build`` dir):
+
+    .. code-block::
+
+      cp ./src/apps/server/hailo-ollama ~/.local/bin/
+      mkdir -p ~/.config/hailo-ollama/
+      cp ../config/hailo-ollama.json ~/.config/hailo-ollama/
+      mkdir -p ~/.local/share/hailo-ollama
+      cp -r ../models/ ~/.local/share/hailo-ollama
+
+
+Step 2 - add the **models** (mandatory for *all* options)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Download the latest models bundle (HEFs) from *the models page* of the Github repository [**GenAI**](https://github.com/hailo-ai/hailo_model_zoo_gen_ai):
+
+  .. code-block::
+
+    wget https://github.com/hailo-ai/hailo_model_zoo_gen_ai/tree/master/models/hailo_model_zoo_gen_ai_models_<ver>.tar.gz
+
+* Unpack them and run the utility to add them to the local blob store:
+
+  * For *option A or B* use **system-wide** installation:
+
+    .. code-block::
+
+      sudo mkdir -p /usr/share/hailo-ollama/models/blob
+      sudo tar -xzf hailo_model_zoo_gen_ai_models_<ver>.tar.gz -C /usr/share/hailo-ollama/models/
+      sudo ./utility/to_storage.bash \
+          /usr/share/hailo-ollama/models/blob \
+          /usr/share/hailo-ollama/models/*.hef
+
+  * For *option C - Install from source* use **user home** installation:
+
+    .. code-block::
+
+      mkdir -p ~/.local/share/hailo-ollama/models/blob
+      tar -xzf hailo_model_zoo_gen_ai_models_<ver>.tar.gz -C ~/.local/share/hailo-ollama/models/
+      ./utility/to_storage.bash \
+          ~/.local/share/hailo-ollama/models/blob \
+          ~/.local/share/hailo-ollama/models/*.hef
+
+After these two steps, **Hailo-Ollama** (inside a container or on the host)
+will find all models locally and can start immediately.
+
+
+Hailo-Ollama REST API
+---------------------
+
+The Hailo-Ollama API provides a simple method to run GenAI models on Hailo devices through REST API. The API supports a single simultaneous connection with one pending request and it is compatible with the [**Ollama**](https://github.com/ollama/ollama) REST API, so it can be used with existing tools like LangChain, Open-WebUI, etc.
+
+The Hailo-Ollama API is currently limited to Large Language Models (LLMs) and it cannot be used for other tasks such as text-to-image generation or Vision Language Models (VLMs).
+
+Additionally, the API does not support LoRA adapters and the Ollama CLI.
+
+
+A comparison between Ollama and Hailo-Ollama
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :widths: 50 50 50
+    :header-rows: 1
+
+    * - Feature
+      - Hailo-Ollama
+      - Ollama
+    * - API
+      - REST API only
+      - CLI and REST API
+    * - LoRA adapters
+      - Not supported
+      - Supported
+    * - Models format
+      - HEF
+      - GGUF
+    * - Models weights
+      - Not available
+      - Safetensors (for creating adapters)
+    * - Users can upload models
+      - Not supported
+      - Supported
+    * - List available models
+      - Supported
+      - Not supported
+    * - Chat template and model parameters
+      - Supported
+      - Supported
+    * - Support with Hailo devices
+      - Supported
+      - Not supported
+    * - Download models directly from Hailo
+      - Supported
+      - Not supported
+
+
+The Hailo-Ollama API supports the following endpoints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* ``GET /api/version`` - shows the version of the server.
+
+* ``GET /api/ps`` - list models that are currently loaded into memory.
+
+* ``POST /hailo/v1/list`` - list all models available for download.
+* ``GET /api/tags`` - list models already on the server.
+* ``POST /api/pull`` - pulls a model from the library to local storage.
+* ``POST /api/show`` - shows model metadata (parameters, template, details, etc.).
+* ``DELETE /api/delete`` - removes a model from local storage.
+
+* ``POST /api/chat`` - chat with the model.
+* ``POST /api/generate`` - generate text with the model.
+
+
+Using Hailo-Ollama
+^^^^^^^^^^^^^^^^^^
+
+* **Tip**: install ``jq`` (``sudo apt install jq``) for nicer JSON output.
+
+* **Note**: Many endpoints (``/api/pull``, ``/api/chat``, ``/api/generate``) honor a ``"stream"`` Boolean in the JSON body.
+    * ``true``  (default) - Server-Sent incremental chunks.
+    * ``false`` - single JSON response.
+
+* Start the Hailo-Ollama server (default: http://localhost:8000):
+
+  .. code-block::
+
+    hailo-ollama
+
+* Shows the server version:
+
+  .. code-block::
+
+    curl --silent http://localhost:8000/api/version
+
+* Get a list of all available models for download:
+
+  .. code-block::
+
+    curl --silent http://localhost:8000/hailo/v1/list
+
+* Pull a specific model:
+
+  .. code-block::
+
+    curl --silent http://localhost:8000/api/pull \
+         -H 'Content-Type: application/json' \
+         -d '{ "model": "qwen2:1.5b", "stream" : true }'
+
+* Run the model:
+
+  .. code-block::
+
+    curl --silent http://localhost:8000/api/generate \
+         -H 'Content-Type: application/json' \
+         -d '{"model": "qwen2:1.5b", "prompt": "Why is the sky blue?", "stream":false}'
+
+  .. code-block::
+
+    curl --silent http://localhost:8000/api/chat \
+         -H 'Content-Type: application/json' \
+         -d '{"model": "qwen2:1.5b", "messages": [{"role": "user", "content": "Translate to French: The cat is on the table."}]}'
+
+* List models loaded into memory:
+
+  .. code-block::
+
+    curl --silent http://localhost:8000/api/ps
+
+* Removes the model from local storage:
+
+  .. code-block::
+
+    curl --silent -X DELETE http://localhost:8000/api/delete \
+         -H 'Content-Type: application/json' \
+         -d '{"model": "qwen2:1.5b"}'
