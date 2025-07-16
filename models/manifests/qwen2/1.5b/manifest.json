@@ -1,0 +1,30 @@
+{
+    "hef_h10h": "d2414bfbcf8a2b6b56d3496deec0e28c6ad61ca0cec521f6ec5967db698471dc",
+    "template_params": {
+        "bos_token": "",
+        "eos_token": "<|eot_id|>",
+        "chat_template": "{% for message in messages %}{% if loop.first and messages[0]['role'] != 'system' %}{{ '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n' }}{% endif %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
+    },
+    "generation_params": {
+        "stop_tokens": [
+            "<|endoftext|>",
+            "<|im_end|>"
+        ],
+        "repetition_penalty": 1.1,
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20
+    },
+    "license": null,
+    "system_prompt": null,
+    "details": {
+        "parent_model": "",
+        "format": "hef",
+        "family": "qwen2",
+        "families": [
+            "qwen2"
+        ],
+        "parameter_size": "1.5B",
+        "quantization_level": "Q4_0"
+    }
+}

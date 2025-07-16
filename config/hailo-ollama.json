@@ -1,0 +1,11 @@
+{
+    "server": {
+        "host": "0.0.0.0",
+        "port": 8000
+    },
+    "library": {
+        "host": "dev-public.hailo.ai",
+        "port": 443
+    },
+    "main_poll_time_ms": 200
+}
