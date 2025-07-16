@@ -1,0 +1,37 @@
+name: DeepSeek-R1-Distill-Qwen-1.5B
+task_description: Generate text responses to prompts, enabling natural language understanding,
+  multilingual support, content creation and advanced reasoning
+model_properties:
+  workflow_description: Utilizes a transformer-based architecture with instruction
+    tuning to enhance logical reasoning, natural language understanding, and content
+    generation
+  source:
+    url: https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+    icon_url: https://hailo.ai/wp-content/uploads/2025/06/link-Icon_GenAI-page.svg
+  license_name: MIT License
+  number_of_parameters: 1.5B
+  model_size: 1.58 GB
+
+hailo10h:
+  technical_details:
+    operations: 29.4 GOPs per input token
+    context_length: 2048
+    numerical_scheme: A8W4, symmetric, channel-wise
+    inference_api: CPP, Hailo-Ollama
+    compiled_model:
+      url: http://dev-public.hailo.ai/v5.0.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef
+      icon_url: https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg
+
+  performance_metrics:
+    load_time_in_sec: 9.81788
+    time_to_first_token_in_sec: 0.680284
+    tps: 7.83009
+
+  sub_models: {}
+  accuracy:
+    dataset:
+
+  internal_info:
+    compiled_model:
+      freenas_path: /mnt/v02/sdk/releases/model_zoo_gen_ai/v5.0.0/hefs/deepseek-r1-distill-qwen-1.5b.hef
+      md5sum: bc116e035ceedbb22a84f363f3f094f7
