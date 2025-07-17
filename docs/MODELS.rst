@@ -58,7 +58,6 @@ Technical, Performance & Accuracy
      - Numerical Scheme
      - Inference API
      - Compiled Model
-     - Compiled Icon
      - First Load Time [s]
      - Load Time [s]
      - TTFT [s]
@@ -69,7 +68,6 @@ Technical, Performance & Accuracy
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
      - `url <http://dev-public.hailo.ai/v5.0.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
-     - `url <https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg>`__
      - 3.2
      - 9.81788
      - 0.680284
@@ -80,7 +78,6 @@ Technical, Performance & Accuracy
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
      - `url <http://dev-public.hailo.ai/v5.0.0/blob/Qwen2.5-1.5B-Instruct.hef>`__
-     - `url <https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg>`__
      - 3.2
      - 10.7077
      - 0.325097
@@ -91,7 +88,6 @@ Technical, Performance & Accuracy
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
      - `url <http://dev-public.hailo.ai/v5.0.0/blob/Qwen2.5-Coder-1.5B.hef>`__
-     - `url <https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg>`__
      - 3.2
      - 8.58971
      - 0.322522
@@ -102,7 +98,6 @@ Technical, Performance & Accuracy
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
      - `url <http://dev-public.hailo.ai/v5.0.0/blob/Qwen2-1.5B-Instruct.hef>`__
-     - `url <https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg>`__
      - 3.2
      - 8.34639
      - 0.322963
@@ -113,7 +108,6 @@ Technical, Performance & Accuracy
      - A8W4, symmetric, channel-wise
      - CPP
      - `url <http://dev-public.hailo.ai/v5.0.0/blob/b10dbeedc54738cc23bc50cd9895b339296cc352ef8caf02ab2af700f0ed85ab>`__
-     - `url <https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg>`__
      - 3.2
      - 17.1006
      - —
@@ -124,7 +118,6 @@ Technical, Performance & Accuracy
      - a8_w8, channel-wise, symmetric
      - CPP
      - `url <http://dev-public.hailo.ai/v5.0.0/blob/d38d44d440105052f2c6943b751a4e2204d26568538e6e7997900694796665d1>`__
-     - `url <https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg>`__
      - 3.2
      - 5.22621
      - —
