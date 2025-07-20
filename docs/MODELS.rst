@@ -103,22 +103,22 @@ Technical, Performance & Accuracy
      - 0.32
      - 8.12
    * - Qwen2-VL-2B-Instruct
-     - â€”
+     - ---
      - 2048
      - A8W4, symmetric, channel-wise
      - CPP
      - `url <https://dev-public.hailo.ai/v5.0.0/blob/b10dbeedc54738cc23bc50cd9895b339296cc352ef8caf02ab2af700f0ed85ab>`__
      - 3.2
      - 17.10
-     - â€”
+     - ---
      - 8.15
    * - Stable-Diffusion-1.5
-     - 19 TOPS for 20 iterations
-     - â€”
+     - 19 TOPs for 20 iterations
+     - ---
      - A8W8, symmetric, channel-wise
      - CPP
      - `url <https://dev-public.hailo.ai/v5.0.0/blob/d38d44d440105052f2c6943b751a4e2204d26568538e6e7997900694796665d1>`__
      - 3.2
      - 5.22
-     - â€”
-     - â€”
+     - ---
+     - ---
