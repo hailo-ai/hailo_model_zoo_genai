@@ -17,19 +17,19 @@ Model Properties
      - 1.5B
      - 1.58 GB
    * - Qwen2.5-1.5B-Instruct
-     - Consists of a prefill and tbt models.
+     - The pipeline consists of a prefill and tbt models.
      - `url <https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct>`__
      - `url <https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/main/LICENSE>`__
      - 1.5B
      - 1.82 GB
    * - Qwen2.5-Coder-1.5B-Instruct
-     - Consists of a prefill and TBT models, optimized for coding tasks.
+     - The pipeline consists of a prefill and TBT models, optimized for coding tasks.
      - `url <https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B>`__
      - `url <https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B/blob/main/LICENSE>`__
      - 1.5B
      - 1.64 GB
    * - Qwen2-1.5B-Instruct
-     - Consists of a prefill and tbt models.
+     - The pipeline consists of a prefill and tbt models.
      - `url <https://huggingface.co/Qwen/Qwen2-1.5B-Instruct>`__
      - `url <https://huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/apache-2.0.md>`__
      - 1.5B
@@ -64,61 +64,61 @@ Technical, Performance & Accuracy
      - TPS
    * - DeepSeek-R1-Distill-Qwen-1.5B
      - 29.4 GOPs per input token
-     - 2048.0
+     - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <http://dev-public.hailo.ai/v5.0.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
+     - `url <https://dev-public.hailo.ai/v5.0.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
      - 3.2
-     - 9.81788
-     - 0.680284
-     - 7.83009
+     - 9.81
+     - 0.68
+     - 7.83
    * - Qwen2.5-1.5B-Instruct
      - 29.4 GOPs per input token
-     - 2048.0
+     - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <http://dev-public.hailo.ai/v5.0.0/blob/Qwen2.5-1.5B-Instruct.hef>`__
+     - `url <https://dev-public.hailo.ai/v5.0.0/blob/Qwen2.5-1.5B-Instruct.hef>`__
      - 3.2
-     - 10.7077
-     - 0.325097
-     - 7.99287
+     - 10.70
+     - 0.32
+     - 7.99
    * - Qwen2.5-Coder-1.5B-Instruct
      - 29.4 GOPs per input token
-     - 2048.0
+     - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <http://dev-public.hailo.ai/v5.0.0/blob/Qwen2.5-Coder-1.5B.hef>`__
+     - `url <https://dev-public.hailo.ai/v5.0.0/blob/Qwen2.5-Coder-1.5B.hef>`__
      - 3.2
-     - 8.58971
-     - 0.322522
-     - 8.08952
+     - 8.58
+     - 0.32
+     - 8.08
    * - Qwen2-1.5B-Instruct
      - 29.4 GOPs per input token
-     - 2048.0
+     - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <http://dev-public.hailo.ai/v5.0.0/blob/Qwen2-1.5B-Instruct.hef>`__
+     - `url <https://dev-public.hailo.ai/v5.0.0/blob/Qwen2-1.5B-Instruct.hef>`__
      - 3.2
-     - 8.34639
-     - 0.322963
-     - 8.12567
+     - 8.34
+     - 0.32
+     - 8.12
    * - Qwen2-VL-2B-Instruct
-     - —
-     - 2048.0
+     - â€”
+     - 2048
      - A8W4, symmetric, channel-wise
      - CPP
-     - `url <http://dev-public.hailo.ai/v5.0.0/blob/b10dbeedc54738cc23bc50cd9895b339296cc352ef8caf02ab2af700f0ed85ab>`__
+     - `url <https://dev-public.hailo.ai/v5.0.0/blob/b10dbeedc54738cc23bc50cd9895b339296cc352ef8caf02ab2af700f0ed85ab>`__
      - 3.2
-     - 17.1006
-     - —
-     - 8.15536
+     - 17.10
+     - â€”
+     - 8.15
    * - Stable-Diffusion-1.5
      - 19 TOPS for 20 iterations
-     - —
-     - a8_w8, channel-wise, symmetric
+     - â€”
+     - A8W8, symmetric, channel-wise
      - CPP
-     - `url <http://dev-public.hailo.ai/v5.0.0/blob/d38d44d440105052f2c6943b751a4e2204d26568538e6e7997900694796665d1>`__
+     - `url <https://dev-public.hailo.ai/v5.0.0/blob/d38d44d440105052f2c6943b751a4e2204d26568538e6e7997900694796665d1>`__
      - 3.2
-     - 5.22621
-     - —
-     - —
+     - 5.22
+     - â€”
+     - â€”
