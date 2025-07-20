@@ -7,13 +7,13 @@ Hailo Model Zoo GenAI
 .. |ollama| image:: https://img.shields.io/badge/Ollama%20-0.6.0-blue.svg
    :target: https://github.com/ollama/ollama/releases
    :alt: Ollama
-   :width: 150
+   :width: 80
    :height: 20
 
 .. |runtime| image:: https://img.shields.io/badge/HailoRT%20-5.0.0-brightgreen.svg
    :target: https://hailo.ai/company-overview/contact-us/
    :alt: HailoRT
-   :width: 170
+   :width: 80
    :height: 20
 
 .. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
