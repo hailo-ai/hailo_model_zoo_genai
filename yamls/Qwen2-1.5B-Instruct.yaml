@@ -1,0 +1,46 @@
+name: Qwen2-1.5B-Instruct
+task_description: Generate text responses to prompts, enabling natural language conversations
+  and content creation.
+model_properties:
+  workflow_description: The pipeline consists of a prefill and tbt models
+  source:
+    url: https://huggingface.co/Qwen/Qwen2-1.5B-Instruct
+    icon_url: https://hailo.ai/wp-content/uploads/2025/06/link-Icon_GenAI-page.svg
+  license_name: Apache License 2.0
+  license_url: https://huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/apache-2.0.md
+  number_of_parameters: 1.5B
+  model_size: 1.56 GB
+hailo10h:
+  technical_details:
+    operations: 29.4 GOPs per input token
+    context_length: 2048
+    numerical_scheme: A8W4, symmetric, channel-wise
+    inference_api: CPP, Hailo-Ollama
+    compiled_model:
+      url: https://dev-public.hailo.ai/v5.0.0/blob/Qwen2-1.5B-Instruct.hef
+      icon_url: Compiled model https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg
+    pre_compiled_model:
+      url: https://dev-public.hailo.ai/v5.0.0/blob/qwen2_1.5b_instruct.q.har
+      icon_url: Pre compiled model https://hailo.ai/wp-content/uploads/2025/06/download-Icon_GenAI-page.svg
+  performance_metrics:
+    first_load_time_in_sec: 13.74
+    time_to_first_token_in_sec: 0.32
+    tps: 8.33
+  sub_models: {}
+  accuracy:
+    dataset:
+      mmlu:
+        test: MMLU
+        evaluation_metric: accuracy
+        full_precision_accuracy: 55
+        post_quantization_accuracy: 51
+  internal_info:
+    compiled_model:
+      freenas_path: /mnt/v02/sdk/releases/model_zoo_gen_ai/v5.0.1/hefs/qwen2_base.hef
+      md5sum: 8d48272ca58a93e386654233d1fb1679
+    pre_compiled_model:
+      freenas_path: /mnt/v02/sdk/releases/model_zoo_gen_ai/v5.0.0/pre_compiled/qwen2_1.5b_instruct.q.har
+      md5sum: 66f39c6156f0dc62e237057057ac870c
+    alls:
+      freenas_path: /mnt/v02/sdk/releases/model_zoo_gen_ai/v5.0.0/pre_compiled/qwen2_1.5b_instruct.alls
+      md5sum: 559e4c81d513aac66d560b188a209a58

@@ -11,15 +11,22 @@ Prerequisites
 Installation
 ------------
 
-1. **Option A - Debian package** *(Recommended)*
+#. Option A - Docker (zero-install host)
+    * Pull the latest HailoRT image from the `Developer Zone <https://hailo.ai/developer-zone/>`_.
+    * The image contains the HailoRT and the Hailo-Ollama server, and is ready to run.
 
-  * Download the latest Debian package from the `Developer Zone <https://hailo.ai/developer-zone/>`__.
+#. Option B - Debian package (recommended)
+    * Download the latest HailoRT GenAI Debian package from the `Developer Zone <https://hailo.ai/developer-zone/>`_.
+    * Install it using the following command:
+        .. code-block::
+
+             sudo dpkg -i hailo_gen_ai_model_zoo_*.deb
 
   * Install it:
 
     .. code-block::
 
-      sudo dpkg -i hailo_model_zoo_gen_ai_<ver>_<arch>.deb
+      sudo dpkg -i hailo_gen_ai_model_zoo_<ver>_<arch>.deb
 
 2. **Option B - Docker** *(Zero-install host)*
 
@@ -45,7 +52,7 @@ Installation
 
     .. code-block::
 
-      git clone https://github.com/hailo-ai/hailo_model_zoo_gen_ai.git
+      git clone https://github.com/hailo-ai/hailo_model_zoo_genai.git
       cd hailo-model-zoo-genai/
       mkdir build && cd build
       cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -71,6 +78,8 @@ The Hailo-Ollama API is currently limited to Large Language Models (LLMs) and it
 
 Additionally, the API does not support LoRA adapters and the Ollama CLI.
 
+The Hailo-Ollama API provides a simple method to run GenAI models on Hailo devices through REST API. The API supports a single simultaneous connection with one pending request and is compatible with the `Ollama <https://github.com/ollama/ollama>`_ API, so it can be used with existing tools like LangChain, Open-WebUI, etc.
+The Hailo-Ollama API is currently limited to language models (LLMs) and cannot be used for other tasks such as text-to-image generation or vision-language models (VLM). Additionally, the API does not support LoRA adapters and the Ollama CLI.
 
 A comparison between Ollama and Hailo-Ollama
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
