@@ -1,5 +1,5 @@
 {
-    "hef_h10h": "caefbb85e9990e379f91423922b5e2789bb64eb4cfdfed995ba98a8b384d4957",
+    "hef_h10h": "42891584ecb8e91efd9b27441ea9cacf2586255fb831992b8db20f6a916ac197",
     "template_params": {
         "bos_token": "<\uff5cbegin\u2581of\u2581sentence\uff5c>",
         "eos_token": "<\uff5cend\u2581of\u2581sentence\uff5c>",

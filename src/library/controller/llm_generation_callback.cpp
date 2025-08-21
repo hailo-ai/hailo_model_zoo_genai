@@ -131,7 +131,7 @@ oatpp::v_io_size LLMGenerationReadCallback::read(
         result->message->role = "assistant";
         result->message->content = std::move(token);
     } else {
-        result->response = result->message->content = std::move(token);
+        result->response = std::move(token);
     }
     const auto response =
         m_object_mapper->writeToString(result).getValue("") + "\r\n";

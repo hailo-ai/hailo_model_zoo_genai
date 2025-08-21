@@ -74,9 +74,8 @@ void set_params(
         }
     }
     if (params.max_generated_tokens) {
-        // We don't count the last "dummy" token so we need to request 1 more
         const auto status = generator_params.set_max_generated_tokens(
-            params.max_generated_tokens.value() + 1
+            params.max_generated_tokens.value()
         );
         if (status != HAILO_SUCCESS) {
             throw hailort::hailort_error(

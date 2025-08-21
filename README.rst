@@ -17,7 +17,7 @@ Hailo Model Zoo GenAI
    :height: 20
 
 .. |license| image:: https://img.shields.io/badge/License-MIT-yellow.svg
-   :target: https://github.com/hailo-ai/hailo_model_zoo_gen_ai/blob/master/LICENSE
+   :target: https://github.com/hailo-ai/hailo_model_zoo_genai/blob/master/LICENSE
    :alt: License: MIT
    :width: 80
    :height: 20
@@ -25,9 +25,9 @@ Hailo Model Zoo GenAI
 
 |runtime| |ollama| |license|
 
-The **Hailo Model Zoo GenAI** is a curated collection of pre-trained GenAI models and example applications optimized for Hailo's AI processors, designed to accelerate GenAI application development.
 
-It includes Hailo-Ollama, an `Ollama <https://github.com/ollama/ollama>`__-compatible REST API written in C++ on top of HailoRT, enabling seamless integration with various external tools and frameworks.
+The Hailo Model Zoo GenAI is a curated collection of pre-trained models and example applications optimized for Hailo's AI processors, designed to accelerate GenAI application development.
+It includes Hailo-Ollama, an `Ollama <https://github.com/ollama/ollama>`_-compatible API written in C++ on top of HailoRT, enabling seamless integration with various external tools and frameworks.
 
 Ollama simplifies running large language models locally by managing model downloads, deployments, and interactions through a convenient REST API.
 
@@ -58,7 +58,7 @@ Two installation methods are available
 
     .. code-block::
 
-      sudo dpkg -i hailo_model_zoo_gen_ai_<ver>_<arch>.deb
+      sudo dpkg -i hailo_gen_ai_model_zoo_<ver>_<arch>.deb
 
 2. **Build from source** (*Alternative*):
 
@@ -66,7 +66,7 @@ Two installation methods are available
 
     .. code-block::
 
-      git clone https://github.com/hailo-ai/hailo_model_zoo_gen_ai.git
+      git clone https://github.com/hailo-ai/hailo_model_zoo_genai.git
       cd hailo-model-zoo-genai/
       mkdir build && cd build
       cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -147,7 +147,7 @@ See the `CHANGELOG <docs/CHANGELOG.rst>`__ page for detailed release notes.
 License
 -------
 
-The Hailo Model Zoo GenAI is distributed under the MIT license. Refer to the `LICENSE <https://github.com/hailo-ai/hailo_model_zoo_gen_ai/blob/master/LICENSE>`__ file for details.
+The Hailo Model Zoo GenAI is distributed under the MIT license. Refer to the `LICENSE <https://github.com/hailo-ai/hailo_model_zoo_genai/blob/master/LICENSE>`__ file for details.
 
 
 Support

@@ -1,4 +1,10 @@
-**v5.0**
+**v5.0.1**
+
+* Update to use HailoRT v5.0.1 (`developer-zone <https://hailo.ai/developer-zone/>`_).
+* Update all compiled models.
+* Bug fixes.
+
+**v5.0.0**
 
 * Initial release of the Hailo Model Zoo GenAI.
 * Initial release of the Hailo-Ollama REST API.
