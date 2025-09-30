@@ -16,12 +16,6 @@ Model Properties
      - `url <https://github.com/deepseek-ai/DeepSeek-R1/blob/main/LICENSE>`__
      - 1.5B
      - 1.58 GB
-   * - Qwen2.5-1.5B-Instruct
-     - The pipeline consists of a prefill and tbt models
-     - `url <https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct>`__
-     - `url <https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/main/LICENSE>`__
-     - 1.5B
-     - 1.82 GB
    * - Qwen2.5-Coder-1.5B-Instruct
      - The pipeline consists of a prefill and TBT models, optimized for coding tasks
      - `url <https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B>`__
@@ -46,6 +40,12 @@ Model Properties
      - `url <https://huggingface.co/spaces/CompVis/stable-diffusion-license>`__
      - 1B
      - 1.00 GB
+   * - Whisper-Base
+     - Audio is sampled to 16 kHz and converted to 10s window. A Transformer encoder processes the spectrogram and a Transformer decoder autoregressively predicts text tokens
+     - `url <https://huggingface.co/openai/whisper-base>`__
+     - `url <https://choosealicense.com/licenses/apache-2.0/>`__
+     - 74M
+     - 155 MB
 
 Technical, Performance & Accuracy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,7 +58,6 @@ Technical, Performance & Accuracy
      - Numerical Scheme
      - Inference API
      - Compiled Model
-     - First Load Time [s]
      - Load Time [s]
      - TTFT [s]
      - TPS
@@ -67,58 +66,52 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <https://dev-public.hailo.ai/v5.0.1/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
-     - 3.2
-     - 12.79
-     - 0.67
-     - 8.11
-   * - Qwen2.5-1.5B-Instruct
+     - `url <https://dev-public.hailo.ai/v5.1.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
+     - 8.82
+     - 0.66
+     - 8.07
+   * - Qwen2.5-Coder-1.5B-Instruct
      - 29.4 GOPs per input token
      - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <https://dev-public.hailo.ai/v5.0.1/blob/Qwen2.5-1.5B-Instruct.hef>`__
-     - 3.2
-     - 14.22
+     - `url <https://dev-public.hailo.ai/v5.1.0/blob/Qwen2.5-Coder-1.5B-Instruct.hef>`__
+     - 8.7
      - 0.31
-     - 8.34
-   * - Qwen2.5-Coder-1.5B
-     - 29.4 GOPs per input token
-     - 2048
-     - A8W4, symmetric, channel-wise
-     - CPP, Hailo-Ollama
-     - `url <https://dev-public.hailo.ai/v5.0.1/blob/Qwen2.5-Coder-1.5B-Instruct.hef>`__
-     - 3.2
-     - 13.0
-     - 0.31
-     - 8.26
+     - 8.19
    * - Qwen2-1.5B-Instruct
      - 29.4 GOPs per input token
      - 2048
      - A8W4, symmetric, channel-wise
      - CPP, Hailo-Ollama
-     - `url <https://dev-public.hailo.ai/v5.0.1/blob/Qwen2-1.5B-Instruct.hef>`__
-     - 3.2
-     - 13.74
-     - 0.32
-     - 8.33
+     - `url <https://dev-public.hailo.ai/v5.1.0/blob/Qwen2-1.5B-Instruct.hef>`__
+     - 8.53
+     - 0.31
+     - 8.27
    * - Qwen2-VL-2B-Instruct
      - ---
      - 2048
      - A8W4, symmetric, channel-wise
      - CPP
-     - `url <https://dev-public.hailo.ai/v5.0.1/blob/Qwen2-VL-2B-Instruct.hef>`__
-     - 3.2
-     - 19.22
-     - 0.92
-     - 8.47
+     - `url <https://dev-public.hailo.ai/v5.1.0/blob/Qwen2-VL-2B-Instruct.hef>`__
+     - 21.55
+     - 0.91
+     - 8.4
    * - Stable-Diffusion-1.5
      - ---
      - ---
      - A8W8, channel-wise, symmetric
      - CPP
-     - `url <https://dev-public.hailo.ai/v5.0.1/blob/Stable-Diffusion-1.5.zip>`__
-     - 3.2
-     - 9.66
+     - `url <https://dev-public.hailo.ai/v5.1.0/blob/Stable-Diffusion-1.5.zip>`__
+     - 5.89
      - ---
      - ---
+   * - Whisper-Base
+     - ---
+     - ---
+     - A8W8, symmetric, channel-wise
+     - CPP
+     - `url <https://dev-public.hailo.ai/v5.1.0/blob/Whisper-Base.hef>`__
+     - 1.33
+     - 0.07
+     - 47.55
