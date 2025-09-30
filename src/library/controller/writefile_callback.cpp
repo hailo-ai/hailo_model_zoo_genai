@@ -25,7 +25,7 @@ OutputFileStream::OutputFileStream(
     oatpp::data::stream::FileOutputStream(filename),
     m_resource(std::move(resource)),
     m_queue(queue),
-    m_content_length(std::stoi(content_length)),
+    m_content_length(std::stoll(content_length)),
     m_completed(0),
     m_update_every(config::output_file_stream_update_every),
     m_count(0) {}
