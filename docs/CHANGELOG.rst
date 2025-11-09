@@ -2,6 +2,13 @@
 Changelog
 =========
 
+**v5.1.1**
+
+* Update to use HailoRT v5.1.1 (`developer-zone <https://hailo.ai/developer-zone/>`_).
+* Removed support from `StableDiffusion-1.5 <https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5>`_.
+* Added `Llama-3.2-3B-Instruct <https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct>`_ model.
+
+
 **v5.1.0**
 
 * Update to use HailoRT v5.1.0 (`developer-zone <https://hailo.ai/developer-zone/>`_).
