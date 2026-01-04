@@ -1,5 +1,5 @@
 {
-    "hef_h10h": "1129f5f8384e4e45c5890104dc4ec1aee77e800ce1484ddc3aa942399aada425",
+    "hef_h10h": "0e8713d5afda0639f606104c5dc8149989984187bff7bf6c312140fd4d29c65f",
     "template_params": {
         "bos_token": "<|begin_of_text|>",
         "eos_token": "<|eot_id|>",
@@ -25,7 +25,7 @@
         "families": [
             "llama3.2"
         ],
-        "parameter_size": "3B",
+        "parameter_size": "1B",
         "quantization_level": "Q4_0"
     }
 }

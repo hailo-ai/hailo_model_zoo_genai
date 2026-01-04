@@ -184,7 +184,7 @@ Using Hailo-Ollama
 
     curl --silent http://localhost:8000/api/chat \
          -H 'Content-Type: application/json' \
-         -d '{"model": "qwen2:1.5b", "messages": [{"role": "user", "content": "Translate to French: The cat is on the table."}]}'
+         -d '{"model": "qwen2:1.5b", "messages": [{"role": "user", "content": "Tell me a joke"}]}'
 
 * List models loaded into memory:
 

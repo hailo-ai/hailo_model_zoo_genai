@@ -7,7 +7,7 @@ Hailo Model Zoo GenAI
    :width: 80
    :height: 20
 
-.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.1.0-brightgreen.svg
+.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.2.0-brightgreen.svg
    :target: https://hailo.ai/company-overview/contact-us/
    :alt: HailoRT
    :width: 80
@@ -44,6 +44,7 @@ Prerequisites
 
 * Hailo-10H module.
 * Ensure  `HailoRT <https://github.com/hailo-ai/hailort>`__ is installed.
+* The Hailo-Ollama is only supported on Linux OS.
 
 Two installation methods are available
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,13 +111,15 @@ Basic Usage
 
     curl --silent http://localhost:8000/api/chat \
          -H 'Content-Type: application/json' \
-         -d '{"model": "qwen2:1.5b", "messages": [{"role": "user", "content": "Translate to French: The cat is on the table."}]}'
+         -d '{"model": "qwen2:1.5b", "messages": [{"role": "user", "content": "Tell me a joke"}]}'
+
 
 Optional Open WebUI
 ~~~~~~~~~~~~~~~~~~~
 
 Example for running the Hailo-Ollama server with WebUI:
 
+* Ensure Python 3.11 and `uvx <https://docs.astral.sh/uv/>`__ are installed and available in ``$PATH``.
 * Install `WebUI <https://docs.openwebui.com/>`__ Ollama client.
 
 * Start the Hailo-Ollama server:
@@ -125,13 +128,13 @@ Example for running the Hailo-Ollama server with WebUI:
 
     hailo-ollama
 
-* Run WebUI Ollama client:
+* Run WebUI Ollama client (requires Python 3.11, Hailo-Ollama on the same host):
 
   .. code-block::
 
-    OLLAMA_BASE_URL=http://127.0.0.1:8000 DATA_DIR=~/.open-webui uvx --python 3.10 open-webui@latest serve
+    OLLAMA_BASE_URL=http://127.0.0.1:8000 DATA_DIR=~/.open-webui uvx --python 3.11 open-webui@latest serve
 
-* Access the WebUI at `http://localhost:8080 <http://localhost:8080>`__
+* Access the WebUI at `http://localhost:8080 <http://localhost:8080>`__ (from a browser on the same host, or via SSH port forwarding: ``ssh -L 8080:localhost:8080 <user>@<host>``).
 
 For detailed usage instructions and advanced examples, see the `USAGE <docs/USAGE.rst>`__ page.
 
