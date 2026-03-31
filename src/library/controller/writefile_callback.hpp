@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -17,22 +17,18 @@
 
 #include "controller/pull_callback.hpp"
 
-class OutputFileStream: public oatpp::data::stream::FileOutputStream {
-  public:
-    OutputFileStream(
-        const char* filename,
-        std::string resource,
-        const std::shared_ptr<PullReadCallback::EventQueue>& queue,
-        const std::string& content_length
-    );
+namespace hailo_ollama
+{
 
-    oatpp::v_io_size write(
-        const void* data,
-        v_buff_size count,
-        oatpp::async::Action& action
-    ) override;
+class OutputFileStream : public oatpp::data::stream::FileOutputStream
+{
+public:
+    OutputFileStream(const char *filename, std::string resource,
+        const std::shared_ptr<PullReadCallback::EventQueue> &queue, const std::string &content_length);
 
-  private:
+    oatpp::v_io_size write(const void *data, v_buff_size count, oatpp::async::Action &action) override;
+
+private:
     std::shared_ptr<PullReadCallback::EventQueue> m_queue;
     std::string m_resource;
     int64_t m_content_length;
@@ -40,3 +36,5 @@ class OutputFileStream: public oatpp::data::stream::FileOutputStream {
     int_fast32_t m_update_every;
     int_fast32_t m_count;
 };
+
+} // namespace hailo_ollama

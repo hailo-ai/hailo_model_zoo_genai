@@ -1,5 +1,9 @@
+# Include third-party dependencies
+include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/oatpp.cmake)
+include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/json.cmake)
+include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/eventpp.cmake)
+
 add_library(hailo-ollama-lib
-    config/runtime_config.hpp
     config/static_config.hpp
     controller/controller.cpp
     controller/controller.hpp
@@ -45,9 +49,12 @@ target_link_libraries(hailo-ollama-lib
     PUBLIC OpenSSL::SSL
     PUBLIC OpenSSL::Crypto
     PUBLIC eventpp::eventpp
-    PRIVATE minja
-    PUBLIC libguarded
 )
 
-target_include_directories(hailo-ollama-lib PUBLIC .)
+# libguarded: local modified copy of cs_plain_guarded.h from cs_libguarded.
+# We keep a local copy (not fetched) because we modified the original header.
+target_include_directories(hailo-ollama-lib
+    PUBLIC .
+    PUBLIC ${PROJECT_SOURCE_DIR}/thirdparty/libguarded/include
+)
 

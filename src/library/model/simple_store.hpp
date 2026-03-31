@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -19,13 +19,19 @@
 
 #include "model/store.hpp"
 
-class SimpleModelStore: public ModelStore {
-  private:
+namespace hailo_ollama
+{
+
+class SimpleModelStore : public ModelStore
+{
+private:
     std::map<std::string, ModelInfo> m_models;
 
-  public:
-    explicit SimpleModelStore(const std::filesystem::path& path);
+public:
+    explicit SimpleModelStore(const std::filesystem::path &path);
 
-    std::optional<ModelInfo> get_model(const std::string& name) override;
+    std::optional<ModelInfo> get_model(const std::string &name) override;
     std::vector<std::string> get_model_names() override;
 };
+
+} // namespace hailo_ollama

@@ -9,4 +9,11 @@ set_target_properties(hailo-ollama PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 
-target_link_libraries(hailo-ollama hailo-ollama-lib)
+target_link_libraries(hailo-ollama
+    PRIVATE hailo-ollama-lib
+    PRIVATE HailoRT::libhailort
+)
+
+install(TARGETS hailo-ollama
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

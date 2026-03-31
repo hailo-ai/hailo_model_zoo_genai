@@ -2,6 +2,24 @@
 Changelog
 =========
 
+**v5.3.0**
+
+* Update to use HailoRT v5.3.0 (`developer-zone <https://hailo.ai/developer-zone/>`_).
+* Added `Qwen3-1.7B <https://huggingface.co/Qwen/Qwen3-1.7B>`_ model.
+* Added `Qwen3-VL-2B-Instruct <https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct>`_ model. The model currently supports single-frame image input only. Video input is not supported in this release.
+* Added support for Windows OS. See `USAGE.rst <USAGE.rst>`_ for details.
+* Added support for ``OLLAMA_HOST`` environment variable to configure the server network interface and port. Its behavior matches the official Ollama server's ``OLLAMA_HOST`` environment variable. See `USAGE.rst <USAGE.rst>`_ for details.
+* Added support for ``HAILO_OLLAMA_VDEVICE_GROUP_ID`` environment variable to enable VDevice sharing with other HailoRT applications (e.g., Whisper, vision models). See `USAGE.rst <USAGE.rst>`_ for details.
+* Added support for streamlined installation from source using ``cmake --install``. See `USAGE.rst <USAGE.rst>`_ and `README.rst <../README.rst>`_ for details.
+* Removed the ``hailo-ollama.config`` file. To define a custom port, use the ``OLLAMA_HOST`` environment variable instead.
+* Users upgrading from previous versions who installed manually to user directories should remove the old artifacts before installing the new version:
+
+  .. code-block:: bash
+    :name: hmzga-changelog-1
+    :caption: Removing old installation artifacts.
+
+    rm -rf ~/.local/bin/hailo-ollama ~/.config/hailo-ollama ~/.local/share/hailo-ollama
+
 **v5.2.0**
 
 * Update to use HailoRT v5.2.0 (`developer-zone <https://hailo.ai/developer-zone/>`_).

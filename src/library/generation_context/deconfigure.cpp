@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -13,14 +13,15 @@
 
 #include "generation_context/generation_context.hpp"
 
-Deconfigure::Deconfigure(
-    const std::shared_ptr<SyncGenerationContext>& context
-) :
-    m_context(context) {}
+namespace hailo_ollama
+{
 
-void Deconfigure::deconfigure_loop() {
+Deconfigure::Deconfigure(const std::shared_ptr<SyncGenerationContext> &context) : m_context(context) {}
+
+void Deconfigure::deconfigure_loop()
+{
     auto generation_context = m_context->lock();
-    auto& lock = generation_context.get_deleter().as_lock();
+    auto &lock = generation_context.get_deleter().as_lock();
     while (true) {
         const auto status = generation_context->wait_expiry(lock);
         if (status != ExpiryWaitStatus::SUCCESS) {
@@ -29,3 +30,5 @@ void Deconfigure::deconfigure_loop() {
         generation_context->reset();
     }
 }
+
+} // namespace hailo_ollama

@@ -7,7 +7,7 @@ Hailo Model Zoo GenAI
    :width: 80
    :height: 20
 
-.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.2.0-brightgreen.svg
+.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.3.0-brightgreen.svg
    :target: https://hailo.ai/company-overview/contact-us/
    :alt: HailoRT
    :width: 80
@@ -44,42 +44,50 @@ Prerequisites
 
 * Hailo-10H module.
 * Ensure  `HailoRT <https://github.com/hailo-ai/hailort>`__ is installed.
-* The Hailo-Ollama is only supported on Linux OS.
+* Supported OS: Linux, Windows.
 
 Two installation methods are available
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. **Pre-built Debian package** (*Recommended*):
+1. **Pre-built Debian package** (*Ubuntu Recommended*):
 
   * Download the latest Debian package from the `Developer Zone <https://hailo.ai/developer-zone/>`__.
 
   * Install it:
 
-    .. code-block::
+    .. code-block:: bash
+      :name: hmzga-1
+      :caption: Installing the Debian package.
 
       sudo dpkg -i hailo_gen_ai_model_zoo_<ver>_<arch>.deb
 
 2. **Build from source** (*Alternative*):
 
-  * Clone the repository and build the Hailo-Ollama server:
+  * **Linux**:
+    Clone the repository, build and install the Hailo-Ollama server:
+
+    .. code-block:: bash
+      :name: hmzga-2
+      :caption: Building from source.
+
+      git clone https://github.com/hailo-ai/hailo_model_zoo_genai.git
+      cd hailo-model-zoo-genai
+      cmake -B build -DCMAKE_BUILD_TYPE=Release
+      cmake --build build --config Release
+      cmake --install build
+
+    * **Note**: On Linux, ``sudo`` may be required for the install step.
+
+  * **Windows**:
+    Clone the repository and build using CMake (Ensure OpenSSL and HailoRT are available):
 
     .. code-block::
 
       git clone https://github.com/hailo-ai/hailo_model_zoo_genai.git
-      cd hailo-model-zoo-genai/
-      mkdir build && cd build
-      cmake -DCMAKE_BUILD_TYPE=Release ..
-      cmake --build .
-
-  * Install to **user home** (still in the ``build`` dir):
-
-    .. code-block::
-
-      cp ./src/apps/server/hailo-ollama ~/.local/bin/
-      mkdir -p ~/.config/hailo-ollama/
-      cp ../config/hailo-ollama.json ~/.config/hailo-ollama/
-      mkdir -p ~/.local/share/hailo-ollama
-      cp -r ../models/ ~/.local/share/hailo-ollama
+      cd hailo-model-zoo-genai
+      cmake -B build -DCMAKE_PREFIX_PATH="C:/Path/To/HailoRT/cmake"
+      cmake --build build --config Release
+      cmake --install build --config Release
 
 
 Basic Usage
@@ -87,31 +95,85 @@ Basic Usage
 
 * Start the Hailo-Ollama server:
 
-  .. code-block::
+  .. code-block:: bash
+    :name: hmzga-3
+    :caption: Starting the Hailo-Ollama server.
 
     hailo-ollama
 
 * List available models:
 
-  .. code-block::
+  .. code-block:: bash
+    :name: hmzga-4
+    :caption: Listing available models.
 
     curl --silent http://localhost:8000/hailo/v1/list
 
 * Pull a specific model. For example:
 
-  .. code-block::
+  .. code-block:: bash
+    :name: hmzga-5
+    :caption: Pulling a specific model.
 
     curl --silent http://localhost:8000/api/pull \
          -H 'Content-Type: application/json' \
          -d '{ "model": "qwen2:1.5b", "stream" : true }'
 
+  **Windows (CMD)**: Use double quotes with escaping:
+
+  .. code-block:: batch
+
+    curl --silent http://localhost:8000/api/pull ^
+         -H "Content-Type: application/json" ^
+         -d "{ \"model\": \"qwen2:1.5b\", \"stream\" : true }"
+
+* Pull all available models:
+
+  .. code-block:: bash
+    :name: hmzga-6
+    :caption: Pulling all available models.
+
+    curl --silent http://localhost:8000/hailo/v1/list \
+    | jq -r '.models[]' \
+    | while read model; do
+        echo "Pulling $model..."
+        curl --no-buffer --silent http://localhost:8000/api/pull \
+            -H 'Content-Type: application/json' \
+            -d "{\"model\": \"$model\", \"stream\": true}"
+      done
+
 * Chat with the model:
 
-  .. code-block::
+  .. code-block:: bash
+    :name: hmzga-7
+    :caption: Chatting with the model via API.
 
     curl --silent http://localhost:8000/api/chat \
          -H 'Content-Type: application/json' \
          -d '{"model": "qwen2:1.5b", "messages": [{"role": "user", "content": "Tell me a joke"}]}'
+
+  **Windows (CMD)**: Use double quotes with escaping:
+
+  .. code-block:: batch
+
+    curl --silent http://localhost:8000/api/chat ^
+         -H "Content-Type: application/json" ^
+         -d "{\"model\": \"qwen2:1.5b\", \"messages\": [{\"role\": \"user\", \"content\": \"Tell me a joke\"}]}"
+
+
+Running Alongside Other Hailo Applications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Hailo-Ollama server can share the Hailo device with other HailoRT-based applications (e.g., Whisper, vision models)
+by setting the ``HAILO_OLLAMA_VDEVICE_GROUP_ID`` environment variable:
+
+.. code-block:: bash
+  :name: hmzga-8
+  :caption: Setting the group ID environment variable.
+
+  HAILO_OLLAMA_VDEVICE_GROUP_ID=SHARED hailo-ollama
+
+Other applications should use the same group ID to share the device. See `USAGE <docs/USAGE.rst>`__ for details.
 
 
 Optional Open WebUI
@@ -133,13 +195,17 @@ Example for running the Hailo-Ollama server with WebUI:
 
 * Start the Hailo-Ollama server:
 
-  .. code-block::
+  .. code-block:: bash
+    :name: hmzga-9
+    :caption: Starting the Hailo-Ollama server for WebUI.
 
     hailo-ollama
 
 * In a separate terminal, install and run Open WebUI using Docker:
 
-  .. code-block::
+  .. code-block:: bash
+    :name: hmzga-10
+    :caption: Running Open WebUI with Docker.
 
     docker run -d --net=host -e OLLAMA_BASE_URL=http://127.0.0.1:8000 -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 

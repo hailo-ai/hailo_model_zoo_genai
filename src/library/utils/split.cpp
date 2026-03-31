@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -11,46 +11,41 @@
 
 #include <string_view>
 
-SplitIterator::SplitIterator(
-    std::string_view str,
-    std::string_view delimiter,
-    std::size_t pos
-) :
-    m_str(str),
-    m_delimiter(delimiter),
-    m_pos(pos),
-    m_end(false) {
+namespace hailo_ollama
+{
+
+SplitIterator::SplitIterator(std::string_view str, std::string_view delimiter, std::size_t pos)
+    : m_str(str), m_delimiter(delimiter), m_pos(pos), m_end(false)
+{
     advance();
 }
 
-SplitIterator::reference SplitIterator::operator*() const {
-    return m_current;
-}
+SplitIterator::reference SplitIterator::operator*() const { return m_current; }
 
-SplitIterator::pointer SplitIterator::operator->() const {
-    return &m_current;
-}
+SplitIterator::pointer SplitIterator::operator->() const { return &m_current; }
 
-SplitIterator& SplitIterator::operator++() {
+SplitIterator &SplitIterator::operator++()
+{
     advance();
     return *this;
 }
 
-SplitIterator SplitIterator::operator++(int) {
+SplitIterator SplitIterator::operator++(int)
+{
     SplitIterator tmp = *this;
     advance();
     return tmp;
 }
 
-bool SplitIterator::operator==(const SplitIterator& other) const {
+bool SplitIterator::operator==(const SplitIterator &other) const
+{
     return m_pos == other.m_pos && m_end == other.m_end;
 }
 
-bool SplitIterator::operator!=(const SplitIterator& other) const {
-    return !(*this == other);
-}
+bool SplitIterator::operator!=(const SplitIterator &other) const { return !(*this == other); }
 
-void SplitIterator::advance() {
+void SplitIterator::advance()
+{
     if (m_pos == std::string_view::npos) {
         m_end = true;
         return;
@@ -66,14 +61,10 @@ void SplitIterator::advance() {
     }
 }
 
-SplitRange::SplitRange(std::string_view str, std::string_view delimiter) :
-    m_str(str),
-    m_delimiter(delimiter) {}
+SplitRange::SplitRange(std::string_view str, std::string_view delimiter) : m_str(str), m_delimiter(delimiter) {}
 
-SplitIterator SplitRange::begin() const {
-    return SplitIterator(m_str, m_delimiter);
-}
+SplitIterator SplitRange::begin() const { return SplitIterator(m_str, m_delimiter); }
 
-SplitIterator SplitRange::end() const {
-    return SplitIterator(m_str, m_delimiter, std::string_view::npos);
-}
+SplitIterator SplitRange::end() const { return SplitIterator(m_str, m_delimiter, std::string_view::npos); }
+
+} // namespace hailo_ollama

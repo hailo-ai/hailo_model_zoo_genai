@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -18,29 +18,29 @@
 #include "controller/pull_callback.hpp"
 #include "model/resource.hpp"
 
-class BlobResourceProvider: public ResourceProvider {
-  public:
-    BlobResourceProvider(
-        std::filesystem::path blob_dir,
-        const std::string& base_url,
-        uint16_t port
-    );
+namespace hailo_ollama
+{
 
-    std::filesystem::path get_resource(const std::string& resource) override;
-    void pull_resource(const std::string& resource) override;
-    void pull_resource(
-        const std::string& resource,
-        const std::shared_ptr<PullReadCallback::EventQueue>& queue
-    ) override;
+class BlobResourceProvider : public ResourceProvider
+{
+public:
+    BlobResourceProvider(std::filesystem::path blob_dir, const std::string &base_url, uint16_t port);
 
-  private:
-    std::string get_resource_str(const std::string& resource);
-    std::shared_ptr<oatpp::web::protocol::http::incoming::Response>
-    request_download_file(const std::string& target, const std::string& source);
-    void download_file(const std::string& target, const std::string& source);
+    std::filesystem::path get_resource(const std::string &resource) override;
+    void pull_resource(const std::string &resource) override;
+    void pull_resource(const std::string &resource,
+        const std::shared_ptr<PullReadCallback::EventQueue> &queue) override;
 
-  private:
+private:
+    std::string get_resource_str(const std::string &resource);
+    std::shared_ptr<oatpp::web::protocol::http::incoming::Response> request_download_file(const std::string &target,
+        const std::string &source);
+    void download_file(const std::string &target, const std::string &source);
+
+private:
     std::filesystem::path m_blob_dir;
     std::string m_base_url;
     uint16_t m_port;
 };
+
+} // namespace hailo_ollama

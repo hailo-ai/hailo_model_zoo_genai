@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -20,7 +20,8 @@
  * Test API client.
  * Use this client to call application APIs.
  */
-class DownloadClient: public oatpp::web::client::ApiClient {
+class DownloadClient : public oatpp::web::client::ApiClient
+{
     API_CLIENT_INIT(DownloadClient)
 
     API_CALL("GET", "blob/{digest}", getDownload, PATH(String, digest))

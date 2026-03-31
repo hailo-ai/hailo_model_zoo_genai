@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -14,6 +14,7 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include <queue>
 
 #include <eventpp/eventqueue.h>
 #include <oatpp/data/mapping/ObjectMapper.hpp>
@@ -21,37 +22,38 @@
 
 #include "dto/DTOs.hpp"
 
-enum class PullEvent { DONE, PROGRESS };
+namespace hailo_ollama
+{
 
-struct PullResponseData {};
+enum class PullEvent {
+    DONE,
+    PROGRESS,
+    PULL_ERROR
+};
 
-class PullReadCallback: public oatpp::data::stream::ReadCallback {
-  public:
-    using EventQueue = eventpp::EventQueue<
-        PullEvent,
-        void(
-            const std::string& status,
-            const std::string& digest,
-            int64_t total,
-            int64_t completed
-        )>;
+struct PullResponseData {
+};
 
-  public:
-    PullReadCallback(
-        const std::shared_ptr<oatpp::data::mapping::ObjectMapper>&
-            object_mapper,
-        const std::shared_ptr<EventQueue>& queue,
-        std::thread&& download_thread
-    );
+class PullReadCallback : public oatpp::data::stream::ReadCallback
+{
+public:
+    using EventQueue = eventpp::EventQueue<PullEvent,
+        void(const std::string &status, const std::string &digest, int64_t total, int64_t completed)>;
 
-    oatpp::v_io_size read(
-        void* buffer,
-        v_buff_size bufferSize,
-        oatpp::async::Action& action
-    ) override;
+    PullReadCallback(const std::shared_ptr<oatpp::data::mapping::ObjectMapper> &object_mapper,
+        const std::shared_ptr<EventQueue> &queue, std::thread &&download_thread);
 
-  private:
+    virtual ~PullReadCallback();
+
+    oatpp::v_io_size read(void *buffer, v_buff_size bufferSize, oatpp::async::Action &action) override;
+
+private:
+    void setup_listeners() noexcept;
+
     std::shared_ptr<oatpp::data::mapping::ObjectMapper> m_object_mapper;
     std::shared_ptr<EventQueue> m_queue;
     std::thread m_download_thread;
+    std::queue<std::string> m_pending_responses;
 };
+
+} // namespace hailo_ollama

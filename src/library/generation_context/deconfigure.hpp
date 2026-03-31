@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -13,11 +13,17 @@
 
 #include "generation_context/generation_context.hpp"
 
-class Deconfigure {
-  public:
-    explicit Deconfigure(const std::shared_ptr<SyncGenerationContext>& context);
+namespace hailo_ollama
+{
+
+class Deconfigure
+{
+public:
+    explicit Deconfigure(const std::shared_ptr<SyncGenerationContext> &context);
     void deconfigure_loop();
 
-  private:
+private:
     std::shared_ptr<SyncGenerationContext> m_context;
 };
+
+} // namespace hailo_ollama

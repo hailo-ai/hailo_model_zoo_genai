@@ -1,22 +1,6 @@
 {
-    "hef_h10h": "971657fa86c18992d6c22938ecf192fba1b98504e8321878f77eb18b759bb3b7",
-    "template_params": {
-        "bos_token": "",
-        "eos_token": "<|eot_id|>",
-        "chat_template": "{% for message in messages %}{% if loop.first and messages[0]['role'] != 'system' %}{{ '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n' }}{% endif %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
-    },
-    "generation_params": {
-        "stop_tokens": [
-            "<|endoftext|>",
-            "<|im_end|>"
-        ],
-        "repetition_penalty": 1.1,
-        "temperature": 0.7,
-        "top_p": 0.8,
-        "top_k": 20
-    },
+    "hef_h10h": "5ab3537d638090185ae502a60947aebcb9b584b21d973026b75e1a3742cc2d93",
     "license": null,
-    "system_prompt": null,
     "details": {
         "parent_model": "",
         "format": "hef",

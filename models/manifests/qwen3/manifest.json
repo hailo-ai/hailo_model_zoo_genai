@@ -1,14 +1,14 @@
 {
-    "hef_h10h": "773470cd8bd8157cb6c48c4c1871b2b1c85b4d4b4b68193486828f7e7681330d",
+    "hef_h10h": "cc9b9d1c92e35249b5a9b7bc31fbd652f03bba1232e99b9a8271845ad6f17821",
     "license": null,
     "details": {
         "parent_model": "",
         "format": "hef",
-        "family": "qwen2.5",
+        "family": "qwen3",
         "families": [
-            "qwen2.5"
+            "qwen3"
         ],
-        "parameter_size": "1.5B",
+        "parameter_size": "1.7B",
         "quantization_level": "Q4_0"
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019-2025 Hailo Technologies Ltd. All rights reserved.
+ * Copyright (c) 2019-2026 Hailo Technologies Ltd. All rights reserved.
  * Distributed under the MIT license (https://opensource.org/licenses/MIT)
  **/
 /**
@@ -18,7 +18,8 @@
  *  Data Transfer Object. Object containing fields only.
  *  Used in API for serialization/deserialization and validation
  */
-class ModelParameters: public oatpp::DTO {
+class ModelParameters : public oatpp::DTO
+{
     DTO_INIT(ModelParameters, DTO)
 
     DTO_FIELD(Float32, temperature);
@@ -32,7 +33,8 @@ class ModelParameters: public oatpp::DTO {
     DTO_FIELD(Boolean, use_mlock);
 };
 
-class GenerationParams: public oatpp::DTO {
+class GenerationParams : public oatpp::DTO
+{
     DTO_INIT(GenerationParams, DTO)
 
     DTO_FIELD(String, model);
@@ -47,14 +49,16 @@ class GenerationParams: public oatpp::DTO {
     DTO_FIELD(Int32, keep_alive);
 };
 
-class ChatMessage: public oatpp::DTO {
+class ChatMessage : public oatpp::DTO
+{
     DTO_INIT(ChatMessage, DTO)
 
     DTO_FIELD(String, role);
     DTO_FIELD(String, content);
 };
 
-class ChatParams: public oatpp::DTO {
+class ChatParams : public oatpp::DTO
+{
     DTO_INIT(ChatParams, DTO)
 
     DTO_FIELD(String, model);
@@ -68,7 +72,8 @@ class ChatParams: public oatpp::DTO {
     DTO_FIELD(Int32, keep_alive);
 };
 
-class GenerationResponse: public oatpp::DTO {
+class GenerationResponse : public oatpp::DTO
+{
     DTO_INIT(GenerationResponse, DTO)
 
     DTO_FIELD(String, model);
@@ -78,7 +83,8 @@ class GenerationResponse: public oatpp::DTO {
     DTO_FIELD(Boolean, done);
 };
 
-class GenerationResponseFinal: public oatpp::DTO {
+class GenerationResponseFinal : public oatpp::DTO
+{
     DTO_INIT(GenerationResponseFinal, DTO)
 
     DTO_FIELD(String, model);
@@ -96,14 +102,16 @@ class GenerationResponseFinal: public oatpp::DTO {
     DTO_FIELD(Vector<UInt64>, context);
 };
 
-class ChatCompletionMessage: public oatpp::DTO {
+class ChatCompletionMessage : public oatpp::DTO
+{
     DTO_INIT(ChatCompletionMessage, DTO)
 
     DTO_FIELD(String, role);
-    DTO_FIELD(String, content);  // TODO: switch to Any
+    DTO_FIELD(String, content); // TODO: switch to Any
 };
 
-class CreateChatCompletionParams: public oatpp::DTO {
+class CreateChatCompletionParams : public oatpp::DTO
+{
     DTO_INIT(CreateChatCompletionParams, DTO)
 
     DTO_FIELD(String, model);
@@ -119,7 +127,8 @@ class CreateChatCompletionParams: public oatpp::DTO {
     DTO_FIELD(Int8, n) = 1;
 };
 
-class ChatChoice: public oatpp::DTO {
+class ChatChoice : public oatpp::DTO
+{
     DTO_INIT(ChatChoice, DTO)
 
     DTO_FIELD(Int64, index);
@@ -127,7 +136,8 @@ class ChatChoice: public oatpp::DTO {
     DTO_FIELD(String, finish_reason);
 };
 
-class CreateChatCompletionResponse: public oatpp::DTO {
+class CreateChatCompletionResponse : public oatpp::DTO
+{
     DTO_INIT(CreateChatCompletionResponse, DTO)
 
     DTO_FIELD(String, id);
@@ -137,7 +147,8 @@ class CreateChatCompletionResponse: public oatpp::DTO {
     DTO_FIELD(Vector<Object<ChatChoice>>, choices);
 };
 
-class ModelInfoDetails: public oatpp::DTO {
+class ModelInfoDetails : public oatpp::DTO
+{
     DTO_INIT(ModelInfoDetails, DTO)
 
     DTO_FIELD(String, parent_model);
@@ -148,7 +159,8 @@ class ModelInfoDetails: public oatpp::DTO {
     DTO_FIELD(String, quantization_level);
 };
 
-class ModelInfoShort: public oatpp::DTO {
+class ModelInfoShort : public oatpp::DTO
+{
     DTO_INIT(ModelInfoShort, DTO)
 
     DTO_FIELD(String, name);
@@ -160,58 +172,65 @@ class ModelInfoShort: public oatpp::DTO {
     DTO_FIELD(String, expires_at);
 };
 
-class ListAllResponse: public oatpp::DTO {
+class ListAllResponse : public oatpp::DTO
+{
     DTO_INIT(ListAllResponse, DTO)
 
     DTO_FIELD(Vector<String>, models);
 };
 
-class TagsResponse: public oatpp::DTO {
+class TagsResponse : public oatpp::DTO
+{
     DTO_INIT(TagsResponse, DTO)
 
     DTO_FIELD(Vector<Object<ModelInfoShort>>, models);
 };
 
-class ShowParams: public oatpp::DTO {
+class ShowParams : public oatpp::DTO
+{
     DTO_INIT(ShowParams, DTO)
 
     DTO_FIELD(String, model);
 };
 
-class ShowResponse: public oatpp::DTO {
+class ShowResponse : public oatpp::DTO
+{
     DTO_INIT(ShowResponse, DTO)
 
     DTO_FIELD(String, license);
     DTO_FIELD(String, modelfile);
     DTO_FIELD(String, parameters);
-    DTO_FIELD(String, chat_template, "template");
     DTO_FIELD(Object<ModelInfoDetails>, details);
     DTO_FIELD(String, model_info);
     DTO_FIELD(Vector<String>, capabilities);
     DTO_FIELD(String, modified_at);
 };
 
-class PullParams: public oatpp::DTO {
+class PullParams : public oatpp::DTO
+{
     DTO_INIT(PullParams, DTO)
 
     DTO_FIELD(String, model);
     DTO_FIELD(Boolean, stream) = true;
 };
 
-class DeleteParams: public oatpp::DTO {
+class DeleteParams : public oatpp::DTO
+{
     DTO_INIT(DeleteParams, DTO)
 
     DTO_FIELD(String, model);
 };
 
-class DeleteErrorResponse: public oatpp::DTO {
+class DeleteErrorResponse : public oatpp::DTO
+{
     DTO_INIT(DeleteErrorResponse, DTO)
 
     DTO_FIELD(String, code);
     DTO_FIELD(String, error);
 };
 
-class PullResponse: public oatpp::DTO {
+class PullResponse : public oatpp::DTO
+{
     DTO_INIT(PullResponse, DTO)
 
     DTO_FIELD(String, status);
@@ -220,13 +239,15 @@ class PullResponse: public oatpp::DTO {
     DTO_FIELD(Int64, completed);
 };
 
-class VersionResponse: public oatpp::DTO {
+class VersionResponse : public oatpp::DTO
+{
     DTO_INIT(VersionResponse, DTO)
 
     DTO_FIELD(String, version);
 };
 
-class ErrorResponse: public oatpp::DTO {
+class ErrorResponse : public oatpp::DTO
+{
     DTO_INIT(ErrorResponse, DTO)
 
     DTO_FIELD(String, error);
