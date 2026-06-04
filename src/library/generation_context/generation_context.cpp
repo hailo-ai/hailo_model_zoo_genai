@@ -20,6 +20,7 @@
 #include <hailo/genai/llm/llm.hpp>
 #include <hailo/hailort_defaults.hpp>
 #include <hailo/vdevice.hpp>
+#include <nlohmann/json.hpp>
 #include <oatpp/base/Log.hpp>
 
 #include "config/static_config.hpp"
@@ -112,30 +113,10 @@ hailort::genai::LLMGeneratorCompletion GenerationContext::generate_one(const Gen
 
 void GenerationContext::append_assistant_message(const std::string &content)
 {
-    static constexpr char QUOTE_CHAR = '"';
-    static constexpr char BACKSLASH_CHAR = '\\';
-    static constexpr std::string_view ESCAPED_QUOTE = "\\\"";
-    static constexpr std::string_view ESCAPED_BACKSLASH = "\\\\";
-
-    // Escape quotes in content for JSON
-    std::string escaped_content = content;
-    size_t pos = 0;
-    while ((pos = escaped_content.find(QUOTE_CHAR, pos)) != std::string::npos) {
-        escaped_content.replace(pos, 1, ESCAPED_QUOTE);
-        pos += ESCAPED_QUOTE.size();
-    }
-    // Also escape backslashes
-    pos = 0;
-    while ((pos = escaped_content.find(BACKSLASH_CHAR, pos)) != std::string::npos) {
-        if (pos + 1 < escaped_content.size() && escaped_content[pos + 1] != QUOTE_CHAR) {
-            escaped_content.replace(pos, 1, ESCAPED_BACKSLASH);
-            pos += ESCAPED_BACKSLASH.size();
-        } else {
-            pos++;
-        }
-    }
-
-    m_conversation_history.push_back(R"({"role": "assistant", "content": ")" + escaped_content + R"("})");
+    nlohmann::json j;
+    j["role"] = "assistant";
+    j["content"] = content;
+    m_conversation_history.push_back(j.dump());
 }
 
 std::string GenerationContext::get_model_name() const { return m_model_name; }

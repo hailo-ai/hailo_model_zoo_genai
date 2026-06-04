@@ -17,6 +17,7 @@
 #include <vector>
 
 #include <hailo/genai/llm/llm.hpp>
+#include <nlohmann/json.hpp>
 #include <oatpp/data/mapping/ObjectMapper.hpp>
 #include <oatpp/data/stream/Stream.hpp>
 
@@ -34,18 +35,12 @@ inline std::string strip_eos_suffix(const std::string &text, const std::string &
     return text;
 }
 
-inline std::string escape_json_quotes(const std::string &text)
+inline std::string message_to_json(const std::string &role, const std::string &content)
 {
-    static constexpr char QUOTE_CHAR = '"';
-    static constexpr std::string_view ESCAPED_QUOTE = "\\\"";
-
-    std::string result = text;
-    size_t pos = 0;
-    while ((pos = result.find(QUOTE_CHAR, pos)) != std::string::npos) {
-        result.replace(pos, 1, ESCAPED_QUOTE);
-        pos += ESCAPED_QUOTE.size();
-    }
-    return result;
+    nlohmann::json j;
+    j["role"] = role;
+    j["content"] = content;
+    return j.dump();
 }
 
 class LLMGenerationReadCallback : public oatpp::data::stream::ReadCallback

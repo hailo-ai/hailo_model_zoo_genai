@@ -451,8 +451,8 @@ std::shared_ptr<oat::OutgoingResponse> MyController::generate(const oatpp::Objec
     const auto &prompt = generation_params->prompt;
     const auto stream = generation_params->stream;
 
-    // Create structured prompt as JSON string using raw string literal
-    std::vector<std::string> prompt_json_strings = {R"({"role": "user", "content": ")" + std::string(prompt) + R"("})"};
+    // Create structured prompt as JSON string using message_to_json
+    std::vector<std::string> prompt_json_strings = {message_to_json("user", prompt)};
 
     return handle_completion(model_data, prompt_json_strings, generation_params->options, stream,
         generation_params->keep_alive, model, ReturnType::RESPONSE);
@@ -478,8 +478,7 @@ std::shared_ptr<oat::OutgoingResponse> MyController::chat(const oatpp::Object<Ch
     // Convert messages to JSON strings for structured prompts
     std::vector<std::string> prompt_json_strings;
     for (const auto &message : *generation_params->messages) {
-        prompt_json_strings.push_back(R"({"role": ")" + message->role + R"(", "content": ")" +
-                                      escape_json_quotes(message->content) + R"("})");
+        prompt_json_strings.push_back(message_to_json(message->role, message->content));
     }
 
     return handle_completion(model_data, prompt_json_strings, generation_params->options, stream,
@@ -518,8 +517,7 @@ std::shared_ptr<oat::OutgoingResponse> MyController::chat_completions(const oatp
     // Convert messages to JSON strings for structured prompts
     std::vector<std::string> prompt_json_strings;
     for (const auto &message : *generation_params->messages) {
-        prompt_json_strings.push_back(R"({"role": ")" + message->role + R"(", "content": ")" +
-                                      escape_json_quotes(message->content) + R"("})");
+        prompt_json_strings.push_back(message_to_json(message->role, message->content));
     }
 
     auto model_options = ModelParameters::createShared();
