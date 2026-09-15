@@ -11,6 +11,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <limits>
 #include <string>
 
 namespace hailo_ollama
@@ -27,6 +28,9 @@ constexpr uint16_t MIN_PORT_NUMBER = 1;
 
 // NDJSON line terminator (CRLF per HTTP/1.1 chunked transfer encoding)
 static const std::string NDJSON_LINE_TERMINATOR = "\r\n";
+
+static const std::string HEF_SHA256_COMPANION_FILE_SUFFIX = ".sha256";
+static const std::string CACHED_HEF_VERSION_FILE_SUFFIX = ".version";
 
 // Environment variables
 static const std::string OLLAMA_HOST_ENV_VAR = "OLLAMA_HOST";

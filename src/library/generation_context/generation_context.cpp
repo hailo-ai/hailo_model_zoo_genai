@@ -20,9 +20,11 @@
 #include <hailo/genai/llm/llm.hpp>
 #include <hailo/hailort_defaults.hpp>
 #include <hailo/vdevice.hpp>
+#include <nlohmann/json.hpp>
 #include <oatpp/base/Log.hpp>
 
 #include "config/static_config.hpp"
+#include "utils/json_utils.hpp"
 
 using namespace std::string_literals;
 
@@ -66,7 +68,25 @@ void GenerationContext::load_model(const std::string &model_name, std::filesyste
         auto llm_params = hailort::genai::LLMParams();
         llm_params.set_model(m_last_path.string(), ""s);
         m_llm = std::make_unique<LLMWrapper>(hailort::genai::LLM::create(m_vdevice, llm_params).expect("Failed to create LLM"));
+
+        const auto chat_template = (*m_llm)->prompt_template().expect("Failed to get prompt template");
+        m_tool_call_parser.emplace(chat_template);
+        // Fail open: a template we cannot probe is treated as tool-capable, so a probe failure never blocks a request.
+        m_supports_tools = ToolCallParser::does_template_support_tools(chat_template).value_or(true);
+
         OATPP_LOGi("GenerationThread", "Finished loading model '{}'", m_model_name);
+    }
+}
+
+const ToolCallParser &GenerationContext::tool_call_parser() const { return *m_tool_call_parser; }
+
+bool GenerationContext::supports_tools() const { return m_supports_tools; }
+
+void GenerationContext::clear_llm_context()
+{
+    const auto status = (*m_llm)->clear_context();
+    if (status != HAILO_SUCCESS) {
+        throw hailort::hailort_error(status, "Failed to clear context");
     }
 }
 
@@ -75,6 +95,19 @@ hailort::genai::LLMGeneratorCompletion GenerationContext::generate_one(const Gen
     OATPP_LOGi("GenerationThread", "got prompt");
 
     load_model(params.model_name, params.model_path, params.keep_alive);
+
+    // Tools are only legal on a fresh context, so their presence forces a full re-send of history.
+    if (!params.tools_json_strings.empty()) {
+        clear_llm_context();
+        OATPP_LOGi("GenerationThread", "Tools present, clearing context and sending {} messages with {} tools",
+            params.prompt_json_strings.size(), params.tools_json_strings.size());
+        auto generator_completion =
+            (*m_llm)
+                ->generate(params.generator_params, params.prompt_json_strings, params.tools_json_strings)
+                .expect("Failed to generate");
+        m_conversation_history = params.prompt_json_strings;
+        return generator_completion;
+    }
 
     // Check if this is a continuation of the previous conversation
     // by checking if the new messages start with the cached history as a prefix
@@ -91,10 +124,7 @@ hailort::genai::LLMGeneratorCompletion GenerationContext::generate_one(const Gen
         OATPP_LOGi("GenerationThread", "Continuation detected, sending {} new messages", messages_to_send.size());
     } else {
         // New conversation - clear context and send all messages
-        const auto status = (*m_llm)->clear_context();
-        if (status != HAILO_SUCCESS) {
-            throw hailort::hailort_error(status, "Failed to clear context");
-        }
+        clear_llm_context();
         messages_to_send = params.prompt_json_strings;
         OATPP_LOGi("GenerationThread", "New conversation, clearing context and sending {} messages",
             messages_to_send.size());
@@ -110,32 +140,18 @@ hailort::genai::LLMGeneratorCompletion GenerationContext::generate_one(const Gen
     return generator_completion;
 }
 
-void GenerationContext::append_assistant_message(const std::string &content)
+void GenerationContext::append_assistant_message(const std::string &content,
+    const std::vector<ToolCall> &tool_calls)
 {
-    static constexpr char QUOTE_CHAR = '"';
-    static constexpr char BACKSLASH_CHAR = '\\';
-    static constexpr std::string_view ESCAPED_QUOTE = "\\\"";
-    static constexpr std::string_view ESCAPED_BACKSLASH = "\\\\";
-
-    // Escape quotes in content for JSON
-    std::string escaped_content = content;
-    size_t pos = 0;
-    while ((pos = escaped_content.find(QUOTE_CHAR, pos)) != std::string::npos) {
-        escaped_content.replace(pos, 1, ESCAPED_QUOTE);
-        pos += ESCAPED_QUOTE.size();
-    }
-    // Also escape backslashes
-    pos = 0;
-    while ((pos = escaped_content.find(BACKSLASH_CHAR, pos)) != std::string::npos) {
-        if (pos + 1 < escaped_content.size() && escaped_content[pos + 1] != QUOTE_CHAR) {
-            escaped_content.replace(pos, 1, ESCAPED_BACKSLASH);
-            pos += ESCAPED_BACKSLASH.size();
-        } else {
-            pos++;
+    nlohmann::json message = {{"role", "assistant"}, {"content", content}};
+    if (!tool_calls.empty()) {
+        auto tool_calls_json = nlohmann::json::array();
+        for (const auto &tool_call : tool_calls) {
+            tool_calls_json.push_back({{"function", {{"name", tool_call.name}, {"arguments", tool_call.arguments}}}});
         }
+        message["tool_calls"] = std::move(tool_calls_json);
     }
-
-    m_conversation_history.push_back(R"({"role": "assistant", "content": ")" + escaped_content + R"("})");
+    m_conversation_history.push_back(message.dump());
 }
 
 std::string GenerationContext::get_model_name() const { return m_model_name; }
@@ -171,6 +187,8 @@ void GenerationContext::reset()
     m_last_path = "";
     m_conversation_history.clear();
     m_keep_alive = std::nullopt;
+    m_supports_tools = false;
+    m_tool_call_parser.reset();
     m_llm.reset();
     m_vdevice.reset();
 }

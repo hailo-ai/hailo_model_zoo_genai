@@ -19,6 +19,8 @@
 #include <hailo/vdevice.hpp>
 #include <libguarded/cs_plain_guarded.h>
 
+#include "tool_parsers/tool_call_parser.hpp"
+
 namespace hailo_ollama
 {
 
@@ -28,6 +30,7 @@ struct Generation {
     std::vector<std::string> prompt_json_strings;
     hailort::genai::LLMGeneratorParams generator_params;
     std::optional<std::chrono::seconds> keep_alive;
+    std::vector<std::string> tools_json_strings;
 };
 
 // We want a unique_ptr for LLM but we can't have it so this wrapper is needed
@@ -55,7 +58,11 @@ public:
     explicit GenerationContext(std::optional<std::string> vdevice_group_id);
     hailort::genai::LLMGeneratorCompletion generate_one(const Generation &params);
 
-    void append_assistant_message(const std::string &content);
+    void append_assistant_message(const std::string &content, const std::vector<ToolCall> &tool_calls = {});
+
+    const ToolCallParser &tool_call_parser() const;
+
+    bool supports_tools() const;
 
     std::string get_model_name() const;
 
@@ -78,16 +85,20 @@ public:
     };
 
 private:
+    void clear_llm_context();
+
     std::optional<std::string> m_vdevice_group_id;
     std::shared_ptr<hailort::VDevice> m_vdevice;
     std::unique_ptr<LLMWrapper> m_llm;
     std::string m_model_name;
     std::filesystem::path m_last_path;
+    std::optional<ToolCallParser> m_tool_call_parser;
+    bool m_supports_tools = false;
     std::vector<std::string> m_conversation_history; // Track conversation as JSON messages
     std::chrono::steady_clock::time_point m_last_generation;
     std::optional<std::chrono::seconds> m_keep_alive;
     std::condition_variable m_keep_alive_shortened;
-    bool m_stop_flag;
+    bool m_stop_flag = false;
 };
 
 using SyncGenerationContext = libguarded::plain_guarded<GenerationContext>;

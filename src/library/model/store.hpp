@@ -20,7 +20,7 @@ namespace hailo_ollama
 
 struct ModelInfo {
     std::string name;
-    std::string hef_resource;
+    std::string hef_filename;
     std::string details;
     std::string license;
 };
