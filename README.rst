@@ -43,8 +43,20 @@ Prerequisites
 ~~~~~~~~~~~~~
 
 * Hailo-10H module.
-* Ensure  `HailoRT <https://github.com/hailo-ai/hailort>`__ is installed.
+* Ensure `HailoRT <https://github.com/hailo-ai/hailort>`__ v5.3.0 is installed.
 * Supported OS: Linux, Windows.
+
+.. note::
+
+   Raspberry Pi AI HAT+ 2 users should keep the HailoRT runtime, PCIe
+   driver, firmware, and Hailo-Ollama package on the same major/minor
+   version. For v5.3.0 models, install the v5.3.0 HailoRT and PCIe driver
+   packages from the Hailo Developer Zone before installing
+   ``hailo_gen_ai_model_zoo_5.3.0_arm64.deb``. Mixing Raspberry Pi OS
+   repository packages such as ``h10-hailort`` v5.1.1 with the v5.3.0
+   GenAI package can leave ``hailo-ollama`` unable to find
+   ``libhailort.so.5.3.0`` or make the driver reject firmware that was
+   already loaded by an older stack.
 
 Two installation methods are available
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

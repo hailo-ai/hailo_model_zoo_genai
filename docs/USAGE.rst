@@ -5,7 +5,30 @@ Prerequisites
 -------------
 
 * Hailo-10H module.
-* Ensure `HailoRT <https://github.com/hailo-ai/hailort>`__ version **HailoRT v5.0** or above is installed (for non-docker installations).
+* Ensure `HailoRT <https://github.com/hailo-ai/hailort>`__ version **HailoRT v5.3.0** is installed (for non-docker installations).
+
+.. note::
+
+   The Hailo-Ollama binary links against the matching HailoRT shared
+   library for the release. For example, the v5.3.0 Debian package requires
+   ``libhailort.so.5.3.0``. On Raspberry Pi AI HAT+ 2 systems, do not install
+   the GenAI v5.3.0 package on top of an older Raspberry Pi OS Hailo-10H
+   stack such as ``h10-hailort`` v5.1.1. Install matching v5.3.0 HailoRT and
+   PCIe driver packages from the Hailo Developer Zone first, then install
+   the GenAI package.
+
+   If you upgrade the PCIe driver while the Hailo-10H firmware is already
+   loaded, the new driver may report a driver/endpoint firmware version
+   mismatch until the device is reset. Rebooting resolves this. On systems
+   that expose PCI reset, the following reset can avoid a full reboot:
+
+   .. code-block:: bash
+      :name: hmzga-usage-pci-reset
+      :caption: Resetting the Hailo-10H PCIe function after a driver upgrade.
+
+      sudo sh -c 'echo 1 > /sys/bus/pci/devices/0001:01:00.0/reset'
+      sudo modprobe -r hailo1x_pci
+      sudo modprobe hailo1x_pci
 
 
 Installation
