@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 option(HAILO_BUILD_UT "Build Unit Tests" OFF)
 
-project(hailo-ollama VERSION 5.3.0)
+project(hailo-ollama VERSION 5.4.0)
 include(FetchContent)
 include(GNUInstallDirs)
 
@@ -19,7 +19,7 @@ find_package(HailoRT 5 REQUIRED)
 
 if(MSVC)
     # Prevent Windows headers from defining min/max and other problematic macros
-    add_compile_definitions(NOMINMAX WIN32_LEAN_AND_MEAN)
+    add_compile_definitions(WIN32_LEAN_AND_MEAN NOMINMAX)
 endif()
 
 add_subdirectory(src)

@@ -29,6 +29,9 @@
 
 #include "config/static_config.hpp"
 #include "controller/llm_generation_callback.hpp"
+#include "utils/dto_json.hpp"
+#include "utils/json_utils.hpp"
+#include "tool_parsers/tool_call_parser.hpp"
 #include "controller/pull_callback.hpp"
 #include "dto/DTOs.hpp"
 #include "generation_context/generation_context.hpp"
@@ -98,7 +101,7 @@ std::optional<std::pair<ModelInfo, std::filesystem::path>> MyController::get_mod
         return std::nullopt;
     }
     const auto &model_data = *model_data_opt;
-    const auto hef = m_resource_provider->get_resource(model_data.hef_resource);
+    const auto hef = m_resource_provider->get_resource(model_data.hef_filename);
     if (!fs::is_regular_file(hef)) {
         return std::nullopt;
     }
@@ -147,17 +150,28 @@ std::optional<std::chrono::seconds> MyController::convert_keep_alive(const oatpp
 }
 
 std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const ModelInfo &model_data,
-    const std::vector<std::string> &prompt_json_strings, const oatpp::Object<ModelParameters> &options,
-    const bool stream, const oatpp::Int32 &keep_alive, const std::string &model, const ReturnType return_type)
+    const fs::path &hef, const std::vector<std::string> &prompt_json_strings, const std::vector<std::string> &tools_json_strings,
+    const oatpp::Object<ModelParameters> &options, const bool stream, const oatpp::Int32 &keep_alive,
+    const std::string &model, const ReturnType return_type)
 {
     using GenerationStatus = hailort::genai::LLMGeneratorCompletion::Status;
 
-    const auto hef = m_resource_provider->get_resource(model_data.hef_resource);
     OATPP_LOGi("handle_completion", "Got model '{}', path '{}'", model, hef.string());
 
     // Load model first to get default generator params
     auto generator = m_generation_context->lock();
     generator->load_model(model_data.name, hef, convert_keep_alive(keep_alive));
+
+    // Tool calls can only occur when the request carried tools; otherwise behave as plain generation.
+    const bool tools_requested = !tools_json_strings.empty();
+    // Match Ollama: reject tools against a model whose template has no tools branch (e.g. Qwen2-VL). The
+    // template is only known once the model is loaded, so this check happens after load and before generate.
+    if (tools_requested && !generator->supports_tools()) {
+        generator.reset(); // unlock before creating response
+        auto error_result = ErrorResponse::createShared();
+        error_result->error = "\"" + model + "\" does not support tools";
+        return createDtoResponse(Status::CODE_400, error_result);
+    }
 
     // Get EOS token from model to clamp it from responses
     std::string eos_token = generator->get_generation_recovery_sequence();
@@ -173,10 +187,14 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
         hef,
         prompt_json_strings,
         std::move(generator_params),
-        convert_keep_alive(keep_alive)
+        convert_keep_alive(keep_alive),
+        tools_json_strings
     };
 
     auto generator_completion = generator->generate_one(std::move(generation));
+
+    // The parser is only known once the model is loaded; reading earlier would yield an empty default.
+    const ToolCallParser &tool_call_parser = generator->tool_call_parser();
     if (!stream) {
         const std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
@@ -190,6 +208,13 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
         // Strip EOS token from response if present
         response_text = strip_eos_suffix(response_text, eos_token);
 
+        ToolCallParseResult parse_result;
+        if (tools_requested) {
+            parse_result = tool_call_parser.parse(response_text);
+        } else {
+            parse_result.content = response_text;
+        }
+
         const std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
         const auto status = generator_completion.generation_status();
@@ -197,8 +222,8 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
                                       ? GenerationContext::GenerationFinishedReason::STOP
                                       : GenerationContext::GenerationFinishedReason::LENGTH;
 
-        // Append assistant response to conversation history for context continuation
-        generator->append_assistant_message(response_text);
+        // Append assistant response (including any tool calls) to conversation history for continuation
+        generator->append_assistant_message(parse_result.content, parse_result.tool_calls);
 
         generator.reset(); // Unlock before creating response
 
@@ -213,11 +238,19 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
 
             auto message = ChatCompletionMessage::createShared();
             message->role = "assistant";
-            message->content = response_text;
+            message->content = parse_result.content;
 
             auto choice = ChatChoice::createShared();
             choice->index = oatpp::Int64(static_cast<int64_t>(0));
-            choice->finish_reason = std::move(stop_reason);
+            if (!parse_result.tool_calls.empty()) {
+                // OpenAI shape: arguments serialized as a string, finish_reason "tool_calls".
+                const auto arguments_as_string = true;
+                message->tool_calls = tool_calls_to_oatpp(parse_result.tool_calls, arguments_as_string,
+                    m_contentMappers->getDefaultMapper());
+                choice->finish_reason = "tool_calls";
+            } else {
+                choice->finish_reason = std::move(stop_reason);
+            }
             choice->message = message;
 
             result->choices->push_back(choice);
@@ -229,9 +262,15 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
         if (return_type == ReturnType::MESSAGE) {
             result->message = ChatMessage::createShared();
             result->message->role = "assistant";
-            result->message->content = response_text;
+            result->message->content = parse_result.content;
+            if (!parse_result.tool_calls.empty()) {
+                // Native Ollama shape: arguments stay an object, done_reason remains "stop".
+                const auto arguments_as_string = false;
+                result->message->tool_calls = tool_calls_to_oatpp(parse_result.tool_calls, arguments_as_string,
+                    m_contentMappers->getDefaultMapper());
+            }
         } else {
-            result->response = response_text;
+            result->response = parse_result.content;
         }
 
         result->done = true;
@@ -244,7 +283,7 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
     }
     auto body = std::make_shared<oat::OutgoingStreamingBody>(std::make_shared<LLMGenerationReadCallback>(model,
         m_contentMappers->getDefaultMapper(), std::move(generator), std::move(generator_completion),
-        return_type == ReturnType::MESSAGE, eos_token));
+        return_type == ReturnType::MESSAGE, eos_token, tool_call_parser, tools_requested));
 
     auto outgoing_response = OutgoingResponse::createShared(Status::CODE_200, body);
     outgoing_response->putHeader("Content-Type", "application/x-ndjson");
@@ -252,7 +291,7 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_completion(const Mod
 }
 
 std::shared_ptr<oat::OutgoingResponse> MyController::handle_load_unload(const std::string &model_name,
-    const ModelInfo &model_data, const oatpp::Object<ModelParameters> &options, const oatpp::Int32 &keep_alive,
+    const fs::path &hef, const oatpp::Object<ModelParameters> &options, const oatpp::Int32 &keep_alive,
     const bool return_as_message)
 {
     (void)options;
@@ -265,7 +304,6 @@ std::shared_ptr<oat::OutgoingResponse> MyController::handle_load_unload(const st
         result->done_reason = "unload";
     } else {
         // Model load
-        const auto hef = m_resource_provider->get_resource(model_data.hef_resource);
         generator->load_model(model_name, hef, convert_keep_alive(keep_alive));
         result->done_reason = "load";
     }
@@ -383,8 +421,9 @@ std::shared_ptr<oat::OutgoingResponse> MyController::pull_model(const oatpp::Obj
     }
 
     if (!pull_params->stream) {
+        std::string resolved_version;
         try {
-            m_resource_provider->pull_resource(model_data->hef_resource);
+            resolved_version = m_resource_provider->pull_resource(model_data->hef_filename);
         } catch (const std::exception &e) {
             auto error_result = ErrorResponse::createShared();
             error_result->error = e.what();
@@ -392,13 +431,14 @@ std::shared_ptr<oat::OutgoingResponse> MyController::pull_model(const oatpp::Obj
         }
         auto result = PullResponse::createShared();
         result->status = "success";
+        result->resolved_version = resolved_version;
 
         return createDtoResponse(Status::CODE_200, result);
     }
 
     auto queue = std::make_shared<PullReadCallback::EventQueue>();
-    std::thread pull_thread([this, &model_data, queue, hef_resource = model_data->hef_resource]() {
-        m_resource_provider->pull_resource(hef_resource, queue);
+    std::thread pull_thread([this, queue, hef_filename = model_data->hef_filename]() {
+        m_resource_provider->pull_resource(hef_filename, queue);
     });
     auto body =
         std::make_shared<oat::OutgoingStreamingBody>(std::make_shared<PullReadCallback>(m_contentMappers
@@ -419,10 +459,7 @@ std::shared_ptr<oat::OutgoingResponse> MyController::delete_model(const oatpp::O
         error_result->error = "model not found";
         return createDtoResponse(Status::CODE_404, error_result);
     }
-    const auto hef = m_resource_provider->get_resource(model_data->hef_resource);
-    std::error_code error_code;
-    const auto removed = fs::remove(hef, error_code);
-    if (error_code || !removed) {
+    if (!m_resource_provider->remove_resource(model_data->hef_filename)) {
         auto error_result = DeleteErrorResponse::createShared();
         error_result->code = "not_found";
         error_result->error = "model not found";
@@ -443,18 +480,19 @@ std::shared_ptr<oat::OutgoingResponse> MyController::generate(const oatpp::Objec
         return createDtoResponse(Status::CODE_404, error_result);
     }
     const auto &model_data = model_data_opt->first;
+    const auto &hef = model_data_opt->second;
 
     if (!generation_params->prompt) {
-        return handle_load_unload(model, model_data, generation_params->options, generation_params->keep_alive, false);
+        return handle_load_unload(model, hef, generation_params->options, generation_params->keep_alive, false);
     }
 
     const auto &prompt = generation_params->prompt;
     const auto stream = generation_params->stream;
 
     // Create structured prompt as JSON string using raw string literal
-    std::vector<std::string> prompt_json_strings = {R"({"role": "user", "content": ")" + std::string(prompt) + R"("})"};
+    std::vector<std::string> prompt_json_strings = {R"({"role": "user", "content": ")" + escape_json_string(std::string(prompt)) + R"("})"};
 
-    return handle_completion(model_data, prompt_json_strings, generation_params->options, stream,
+    return handle_completion(model_data, hef, prompt_json_strings, {}, generation_params->options, stream,
         generation_params->keep_alive, model, ReturnType::RESPONSE);
 }
 
@@ -468,21 +506,22 @@ std::shared_ptr<oat::OutgoingResponse> MyController::chat(const oatpp::Object<Ch
         return createDtoResponse(Status::CODE_404, error_result);
     }
     const auto &model_data = model_data_opt->first;
+    const auto &hef = model_data_opt->second;
 
     if (!generation_params->messages) {
-        return handle_load_unload(model, model_data, generation_params->options, generation_params->keep_alive, true);
+        return handle_load_unload(model, hef, generation_params->options, generation_params->keep_alive, true);
     }
 
     const auto stream = generation_params->stream;
 
-    // Convert messages to JSON strings for structured prompts
+    const auto mapper = m_contentMappers->getDefaultMapper();
     std::vector<std::string> prompt_json_strings;
     for (const auto &message : *generation_params->messages) {
-        prompt_json_strings.push_back(R"({"role": ")" + message->role + R"(", "content": ")" +
-                                      escape_json_quotes(message->content) + R"("})");
+        prompt_json_strings.push_back(message_to_json_string(message, mapper));
     }
+    const auto tools_json_strings = tools_to_json_strings(generation_params->tools, mapper);
 
-    return handle_completion(model_data, prompt_json_strings, generation_params->options, stream,
+    return handle_completion(model_data, hef, prompt_json_strings, tools_json_strings, generation_params->options, stream,
         generation_params->keep_alive, model, ReturnType::MESSAGE);
 }
 
@@ -512,15 +551,16 @@ std::shared_ptr<oat::OutgoingResponse> MyController::chat_completions(const oatp
         return createDtoResponse(Status::CODE_404, error_result);
     }
     const auto &model_data = model_data_opt->first;
+    const auto &hef = model_data_opt->second;
 
     const auto stream = generation_params->stream;
 
-    // Convert messages to JSON strings for structured prompts
+    const auto mapper = m_contentMappers->getDefaultMapper();
     std::vector<std::string> prompt_json_strings;
     for (const auto &message : *generation_params->messages) {
-        prompt_json_strings.push_back(R"({"role": ")" + message->role + R"(", "content": ")" +
-                                      escape_json_quotes(message->content) + R"("})");
+        prompt_json_strings.push_back(message_to_json_string(message, mapper));
     }
+    const auto tools_json_strings = tools_to_json_strings(generation_params->tools, mapper);
 
     auto model_options = ModelParameters::createShared();
     model_options->temperature = generation_params->temperature;
@@ -534,8 +574,8 @@ std::shared_ptr<oat::OutgoingResponse> MyController::chat_completions(const oatp
         model_options->num_predict = generation_params->max_completion_tokens;
     }
 
-    return handle_completion(model_data, prompt_json_strings, model_options, stream, oatpp::Int32(nullptr), model,
-        ReturnType::COMPLETION);
+    return handle_completion(model_data, hef, prompt_json_strings, tools_json_strings, model_options, stream,
+        oatpp::Int32(nullptr), model, ReturnType::COMPLETION);
 }
 
 } // namespace hailo_ollama

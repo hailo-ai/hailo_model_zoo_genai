@@ -96,7 +96,7 @@ Model Properties
      - 388 MB
      - > 5.2.0
 
-Some of the precompiled models are compatible only with v5.3.0.
+Some of the precompiled models are compatible only with v5.4.0.
 
 If you need precompiled AI models compatible with v5.1.1, please visit the `Models page <https://github.com/hailo-ai/hailo_model_zoo_genai/blob/v5.1.1/docs/MODELS.rst>`__.
 
@@ -119,7 +119,7 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, group-wise
      - C++, Python, Hailo-Ollama
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/DeepSeek-R1-Distill-Qwen-1.5B.hef>`__
      - 4.99
      - 0.73
      - 7.96
@@ -127,7 +127,7 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, group-wise
      - C++, Python, Hailo-Ollama
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Llama3.2-1B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Llama3.2-1B-Instruct.hef>`__
      - 3.47
      - 0.35
      - 9.89
@@ -135,7 +135,7 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, channel-wise
      - C++, Python, Hailo-Ollama
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2-1.5B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2-1.5B-Instruct.hef>`__
      - 3.66
      - 0.32
      - 8.06
@@ -143,15 +143,15 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, channel-wise
      - C++, Python
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2-1.5B-Instruct-Function-Calling-v1.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2-1.5B-Instruct-Function-Calling-v1.hef>`__
      - 7.59
-     - 0.40
+     - 0.4
      - 6.69
    * - Qwen2.5-1.5B-Instruct
      - 2048
      - A8W4, symmetric, group-wise
      - C++, Python, Hailo-Ollama
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2.5-1.5B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2.5-1.5B-Instruct.hef>`__
      - 5.17
      - 0.37
      - 7.35
@@ -159,7 +159,7 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, channel-wise
      - C++, Python, Hailo-Ollama
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2.5-Coder-1.5B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2.5-Coder-1.5B-Instruct.hef>`__
      - 4.75
      - 0.32
      - 8.13
@@ -167,7 +167,7 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, group-wise
      - C++, Python, Hailo-Ollama
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen3-1.7B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen3-1.7B-Instruct.hef>`__
      - 6.75
      - 0.62
      - 4.78
@@ -175,7 +175,7 @@ Technical, Performance & Accuracy
      - 2048
      - A8W4, symmetric, channel-wise
      - C++, Python
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2-VL-2B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2-VL-2B-Instruct.hef>`__
      - 7.21
      - 1.02
      - 7.04
@@ -183,7 +183,7 @@ Technical, Performance & Accuracy
      - 2048
      - A16W4, symmetric, group-wise
      - C++, Python
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen3-VL-2B-Instruct.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Qwen3-VL-2B-Instruct.hef>`__
      - 7.02
      - 1.47
      - 4.74
@@ -191,7 +191,7 @@ Technical, Performance & Accuracy
      - ---
      - Mixed precision
      - C++, Python
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Whisper-Tiny.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Whisper-Tiny.hef>`__
      - 0.64
      - 0.0
      - 48.14
@@ -199,7 +199,7 @@ Technical, Performance & Accuracy
      - ---
      - Mixed precision
      - C++, Python
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Whisper-Base.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Whisper-Base.hef>`__
      - 1.34
      - 0.0
      - 25.32
@@ -207,7 +207,7 @@ Technical, Performance & Accuracy
      - ---
      - Mixed precision
      - C++, Python
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Whisper-Small.hef>`__
+     - `Link <https://dev-public.hailo.ai/v5.4.0/blob/Whisper-Small.hef>`__
      - 3.39
      - 0.0
      - 10.61
@@ -224,17 +224,17 @@ Qwen-VL (Image Encoders only)
      - FPS
    * - Qwen2-VL-2B-vision-336x336
      - A8W8, symmetric, channel-wise
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2-VL-2B-vision-336x336.hef>`__
+     - `Hailo10h <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2-VL-2B-vision-336x336.hef>`__
      - 3.00
    * - Qwen2-VL-7B-vision-336x336
      - A8W8, symmetric, channel-wise
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2-VL-7B-vision-336x336.hef>`__
+     - `Hailo10h <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2-VL-7B-vision-336x336.hef>`__
      - 2.80
    * - Qwen2-VL-7B-vision-252x448
      - A8W8, symmetric, channel-wise
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen2-VL-7B-vision-252x448.hef>`__
+     - `Hailo10h <https://dev-public.hailo.ai/v5.4.0/blob/Qwen2-VL-7B-vision-252x448.hef>`__
      - 2.80
    * - Qwen3-VL-2B-vision
      - A8W8, symmetric, channel-wise
-     - `Link <https://dev-public.hailo.ai/v5.3.0/blob/Qwen3-VL-2B-vision.hef>`__
+     - `Hailo10h <https://dev-public.hailo.ai/v5.4.0/blob/Qwen3-VL-2B-vision.hef>`__, `Hailo8 <https://dev-public.hailo.ai/v5.4.0/blob/Qwen3-VL-2B-vision-hailo8.hef>`__
      - 4.59

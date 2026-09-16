@@ -34,7 +34,7 @@ ModelInfo model_from_json(const std::string &name, const json &j)
         (license != j.end() && !license->is_null()) ? license->template get<std::string>() : "";
     return ModelInfo{
         name,
-        j.at("hef_h10h").template get<std::string>(),
+        j.at("hef_filename").template get<std::string>(),
         std::move(details_string),
         std::move(license_string)
     };

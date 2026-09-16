@@ -7,7 +7,7 @@ Hailo Model Zoo GenAI
    :width: 80
    :height: 20
 
-.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.3.0-brightgreen.svg
+.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.4.0-brightgreen.svg
    :target: https://hailo.ai/company-overview/contact-us/
    :alt: HailoRT
    :width: 80

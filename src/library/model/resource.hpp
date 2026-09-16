@@ -21,11 +21,13 @@ namespace hailo_ollama
 class ResourceProvider : Interface
 {
 public:
-    virtual std::filesystem::path get_resource(const std::string &resource) = 0;
+    virtual std::filesystem::path get_resource(const std::string &hef_filename) = 0;
     // Throws std::runtime_error on failure
-    virtual void pull_resource(const std::string &resource) = 0;
-    virtual void pull_resource(const std::string &resource,
+    virtual std::string pull_resource(const std::string &hef_filename) = 0;
+    virtual std::string pull_resource(const std::string &hef_filename,
         const std::shared_ptr<PullReadCallback::EventQueue> &queue) = 0;
+    // Removes the cached HEF and any local bookkeeping beside it. Returns whether the cached HEF was removed.
+    virtual bool remove_resource(const std::string &hef_filename) = 0;
 };
 
 } // namespace hailo_ollama

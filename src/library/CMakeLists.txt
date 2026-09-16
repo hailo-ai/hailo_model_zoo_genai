@@ -2,6 +2,7 @@
 include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/oatpp.cmake)
 include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/json.cmake)
 include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/eventpp.cmake)
+include(${HAILO_OLLAMA_CMAKE_SCRIPTS}/minja.cmake)
 
 add_library(hailo-ollama-lib
     config/static_config.hpp
@@ -18,13 +19,17 @@ add_library(hailo-ollama-lib
     generation_context/deconfigure.hpp
     generation_context/generation_context.cpp
     generation_context/generation_context.hpp
-    download/client.hpp
     model/resource.hpp
     model/store.hpp
     model/blob_resource.cpp
     model/blob_resource.hpp
     model/simple_store.cpp
     model/simple_store.hpp
+    tool_parsers/tool_call_parser.cpp
+    tool_parsers/tool_call_parser.hpp
+    utils/json_utils.hpp
+    utils/dto_json.cpp
+    utils/dto_json.hpp
     utils/path.hpp
     utils/path.cpp
     utils/split.hpp
@@ -41,10 +46,13 @@ set_target_properties(hailo-ollama-lib PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 
+target_compile_definitions(hailo-ollama-lib PUBLIC HAILO_OLLAMA_VERSION="${PROJECT_VERSION}")
+
 target_link_libraries(hailo-ollama-lib
     PUBLIC oatpp
     PUBLIC oatpp-openssl
     PRIVATE HailoRT::libhailort
+    PRIVATE minja
     PUBLIC nlohmann_json::nlohmann_json
     PUBLIC OpenSSL::SSL
     PUBLIC OpenSSL::Crypto

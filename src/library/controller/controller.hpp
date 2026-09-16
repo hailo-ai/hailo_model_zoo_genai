@@ -64,13 +64,14 @@ public:
     ENDPOINT("DELETE", "/api/delete", delete_model, BODY_DTO(Object<DeleteParams>, delete_params));
 
 private:
-    std::shared_ptr<OutgoingResponse> handle_completion(const ModelInfo &model_data,
-        const std::vector<std::string> &prompt_json_strings, const Object<ModelParameters> &options, const bool stream,
-        const oatpp::Int32 &keep_alive, const std::string &model, const ReturnType return_type);
+    std::shared_ptr<OutgoingResponse> handle_completion(const ModelInfo &model_data, const std::filesystem::path &hef,
+        const std::vector<std::string> &prompt_json_strings, const std::vector<std::string> &tools_json_strings,
+        const Object<ModelParameters> &options, const bool stream, const oatpp::Int32 &keep_alive,
+        const std::string &model, const ReturnType return_type);
 
     std::shared_ptr<oatpp::web::protocol::http::outgoing::Response> handle_load_unload(const std::string &model_name,
-        const ModelInfo &model_data, const oatpp::Object<ModelParameters> &options, const oatpp::Int32 &keep_alive,
-        const bool return_as_message);
+        const std::filesystem::path &hef, const oatpp::Object<ModelParameters> &options,
+        const oatpp::Int32 &keep_alive, const bool return_as_message);
 
     std::optional<std::pair<ModelInfo, std::filesystem::path>> get_model_data(const std::string &model_name);
 
