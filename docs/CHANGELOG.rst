@@ -2,6 +2,22 @@
 Changelog
 =========
 
+**v5.5.0**
+
+* Update to use HailoRT v5.5.0 (`developer-zone <https://hailo.ai/developer-zone/>`_).
+* Added `Qwen3-4B-Instruct-2507 <https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507>`_ model, available through the C++ and Python APIs and through Hailo-Ollama as ``qwen3:4b``. The model requires a Hailo-10H device with 8 GB of memory; it does not fit on the 4 GB variant.
+* Added `Qwen3-VL-4B-Instruct <https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct>`_ model, available through the C++ and Python APIs, with image and video input. The model requires a Hailo-10H device with 8 GB of memory; it does not fit on the 4 GB variant.
+* Added `Gemma4-E2B-Instruct <https://huggingface.co/google/gemma-4-E2B-it-qat-mobile-transformers>`_ model, available through the C++ and Python APIs and through Hailo-Ollama as ``gemma4:e2b``. Text input only. Tool calling through Hailo-Ollama is not supported.
+* Added `Whisper-Medium <https://huggingface.co/openai/whisper-medium>`_ model, available through the C++ and Python APIs.
+* Updated the `Qwen2-VL-2B-Instruct <https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct>`_ model, with improved Chinese and Japanese responses and higher token throughput. When the first message of a conversation leads with an image, use a system prompt that states the model can see images (for example ``You are a helpful assistant that can see images.``); with a plainer system prompt the model may answer that it cannot see the image.
+* On Hailo-10H devices with 4 GB of memory, the following models may require memory optimization (``optimize_memory_on_device`` in the C++ and Python APIs): Gemma4-E2B-Instruct, Qwen2-1.5B-Instruct-Function-Calling-v1, Qwen2-VL-2B-Instruct and Qwen3-VL-2B-Instruct. A future release is planned to enable it automatically when needed.
+* Added support for Ollama-compatible tools (function calling) on the ``/api/chat`` and OpenAI-compatible ``/v1/chat/completions`` endpoints (LLMs). See `README.rst <../README.rst>`_ and `USAGE.rst <USAGE.rst>`_ for details.
+* Renamed model ``deepseek_r1:1.5b`` to ``deepseek-r1:1.5b``. In order to pull and run the model, use the new name ``deepseek-r1:1.5b``.
+
+**v5.4.0**
+
+* Update to use HailoRT v5.4.0 (`developer-zone <https://hailo.ai/developer-zone/>`_).
+
 **v5.3.0**
 
 * Update to use HailoRT v5.3.0 (`developer-zone <https://hailo.ai/developer-zone/>`_).

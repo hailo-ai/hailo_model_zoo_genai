@@ -1,0 +1,14 @@
+{
+    "hef_filename": "Gemma4-E2B-Instruct.hef",
+    "license": null,
+    "details": {
+        "parent_model": "",
+        "format": "hef",
+        "family": "gemma4",
+        "families": [
+            "gemma4"
+        ],
+        "parameter_size": "4.65B",
+        "quantization_level": "Q4_0"
+    }
+}

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 option(HAILO_BUILD_UT "Build Unit Tests" OFF)
 
-project(hailo-ollama VERSION 5.4.0)
+project(hailo-ollama VERSION 5.5.0)
 include(FetchContent)
 include(GNUInstallDirs)
 
@@ -30,7 +30,15 @@ if(HAILO_BUILD_UT)
     add_test(project-tests hailo-ollama-test)
 endif()
 
-# Install model manifests
+# Install model manifests, replacing any previously installed set so renamed models don't linger
+set(HAILO_OLLAMA_MODELS_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/hailo-ollama/models")
+install(CODE "set(manifests_install_dir \"${HAILO_OLLAMA_MODELS_INSTALL_DIR}/manifests\")")
+install(CODE [[
+    if(NOT IS_ABSOLUTE "${manifests_install_dir}")
+        set(manifests_install_dir "${CMAKE_INSTALL_PREFIX}/${manifests_install_dir}")
+    endif()
+    file(REMOVE_RECURSE "$ENV{DESTDIR}${manifests_install_dir}")
+]])
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/models/manifests
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/hailo-ollama/models
+    DESTINATION ${HAILO_OLLAMA_MODELS_INSTALL_DIR}
 )

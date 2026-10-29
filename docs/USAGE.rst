@@ -82,6 +82,11 @@ The Hailo-Ollama API provides a simple method to run GenAI models on Hailo devic
 
 The Hailo-Ollama API is currently limited to Large Language Models (LLMs) and cannot be used for other tasks such as text-to-image generation or Vision Language Models (VLMs). Additionally, the API does not support LoRA adapters and the Ollama CLI.
 
+Tools (function calling)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Hailo-Ollama supports Ollama-compatible tools (function calling) on the ``/api/chat`` and OpenAI-compatible ``/v1/chat/completions`` endpoints (for LLMs). The API is stateless per request, so the client owns the conversation: resend the ``tools`` list and the full message history on every turn, including the prior assistant ``tool_calls`` and the tool results. The model must declare tool support in its chat template, otherwise a request that includes ``tools`` is rejected with **HTTP 400 "<model> does not support tools"** (matching Ollama).
+
 A comparison between Ollama and Hailo-Ollama
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
