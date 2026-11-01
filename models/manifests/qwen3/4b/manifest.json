@@ -1,0 +1,14 @@
+{
+    "hef_filename": "Qwen3-4B-Instruct-2507.hef",
+    "license": null,
+    "details": {
+        "parent_model": "",
+        "format": "hef",
+        "family": "qwen3",
+        "families": [
+            "qwen3"
+        ],
+        "parameter_size": "4B",
+        "quantization_level": "Q4_0"
+    }
+}

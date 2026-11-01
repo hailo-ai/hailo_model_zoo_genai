@@ -7,7 +7,7 @@ Hailo Model Zoo GenAI
    :width: 80
    :height: 20
 
-.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.4.0-brightgreen.svg
+.. |runtime| image:: https://img.shields.io/badge/HailoRT-5.5.0-brightgreen.svg
    :target: https://hailo.ai/company-overview/contact-us/
    :alt: HailoRT
    :width: 80
@@ -159,6 +159,53 @@ Basic Usage
     curl --silent http://localhost:8000/api/chat ^
          -H "Content-Type: application/json" ^
          -d "{\"model\": \"qwen2:1.5b\", \"messages\": [{\"role\": \"user\", \"content\": \"Tell me a joke\"}]}"
+
+
+Tools (function calling)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Hailo-Ollama supports Ollama-compatible tools (function calling) on the ``/api/chat`` and OpenAI-compatible ``/v1/chat/completions`` endpoints; tool definitions are injected into the model's chat template and tool calls are parsed back out of the model's output.
+
+* Chat with tools:
+
+  .. code-block:: bash
+    :name: hmzga-tools-1
+    :caption: Chatting with tools (function calling) via API.
+
+    curl --silent http://localhost:8000/api/chat \
+         -H 'Content-Type: application/json' \
+         -d '{
+               "model": "qwen2:1.5b",
+               "messages": [{"role": "user", "content": "What is the weather in Paris?"}],
+               "tools": [{
+                 "type": "function",
+                 "function": {
+                   "name": "get_weather",
+                   "description": "Get the current weather for a city",
+                   "parameters": {
+                     "type": "object",
+                     "properties": {
+                       "city": {"type": "string", "description": "The city name"}
+                     },
+                     "required": ["city"]
+                   }
+                 }
+               }]
+             }'
+
+  **Windows (CMD)**: Use double quotes with escaping:
+
+  .. code-block:: batch
+
+    curl --silent http://localhost:8000/api/chat ^
+         -H "Content-Type: application/json" ^
+         -d "{\"model\": \"qwen2:1.5b\", \"messages\": [{\"role\": \"user\", \"content\": \"What is the weather in Paris?\"}], \"tools\": [{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"description\": \"Get the current weather for a city\", \"parameters\": {\"type\": \"object\", \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"The city name\"}}, \"required\": [\"city\"]}}}]}"
+
+When the model decides to call a tool, the assistant message in the response comes back with ``tool_calls``, each holding a ``function.name`` and ``arguments``; otherwise the assistant returns normal ``content``.
+
+**Following Ollama's behavior**, the API is stateless per request - the client owns the conversation, so you must send the full message history **and** the ``tools`` list on every request. The server does not remember tools (or messages) from earlier requests; if you omit ``tools`` on a follow-up, the model will not have them. For multi-turn tool use, include the prior assistant message's ``tool_calls`` and the tool results (messages with ``role: "tool"``, a ``tool_name``, and the result ``content``) in ``messages``.
+
+The model must declare tool support in its chat template; a request that includes ``tools`` for a model without tool support returns **HTTP 400 "<model> does not support tools"** (matching Ollama).
 
 
 Running Alongside Other Hailo Applications
